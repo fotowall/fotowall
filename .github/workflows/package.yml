@@ -39,3 +39,57 @@ jobs:
     secrets:
       CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
       GH_TOKEN: ${{ secrets.GH_PAGES_TOKEN }}
+
+  package-appimage:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
+    runs-on: ${{ matrix.os }} 
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake doxygen qtbase5-dev libqt5svg5-dev libqt5webkit5-dev
+      - name: configure
+        run: cmake . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+      - name: build
+        run: make -j`nproc`  install DESTDIR=AppDir
+      - name: Configure AppImageBuilder.yml
+        run: |
+          sed -i "s|focal|`lsb_release -cs`|g" AppImageBuilder.yml
+          if [[ "`lsb_release -cs`" == 'focal' ]]
+          then
+            sed -i "s|KEY_URL|http://keyserver.ubuntu.com/pks/lookup?op=get\&search=0x3b4fe6acc0b21f32|g" AppImageBuilder.yml
+          elif [[ "`lsb_release -cs`" == 'jammy' ]]
+          then
+            sed -i "s|KEY_URL|http://keyserver.ubuntu.com/pks/lookup?op=get\&search=0x871920D1991BC93C|g" AppImageBuilder.yml
+          elif [[ "`lsb_release -cs`" == 'noble' ]]
+          then
+            sed -i "s|KEY_URL|http://keyserver.ubuntu.com/pks/lookup?op=get\&search=0x871920D1991BC93C|g" AppImageBuilder.yml
+          fi
+          echo "Using the following AppImageBuilder.yml:"
+          cat AppImageBuilder.yml
+      - name: Build AppImage
+        uses: AppImageCrafters/build-appimage-action@master
+        env:
+          UPDATE_INFO: gh-releases-zsync|AppImageCrafters|fotowall|latest|*x86_64.AppImage.zsync
+        with:
+          recipe: AppImageBuilder.yml
+      - name: Push
+        id: push
+        if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
+        uses: cloudsmith-io/action@master
+        with:
+          api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+          command: "push"
+          format: "raw"
+          owner: "arntanguy"
+          repo: "head"
+          file: "./Fotowall-latest-x86_64.AppImage"
+          tags: "focal"
+          name: "Fotowall-latest-x86_64-${{ matrix.os }}.AppImage"
+          summary: "Upload latest raw AppImage"
+          description: "See https://github.com/cloudsmith-io/action"
+          version: ${{ github.sha}}   

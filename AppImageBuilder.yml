@@ -1,0 +1,35 @@
+version: 1
+script:
+  # Ensure that the mksquashfs tool is installed (workaround for the AppImageCrafters/build-appimage GHA)
+  - which mksquashfs || apt install squashfs-tools
+AppDir:
+  path: AppDir
+  app_info:
+    id: fotowall
+    name: Fotowall 
+    icon: fotowall
+    version: latest
+    exec: usr/bin/fotowall
+    exec_args: $@
+  apt:
+    arch: amd64
+    sources:
+    - sourceline: deb http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse
+      key_url: 'KEY_URL'
+    - sourceline: deb http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
+    - sourceline: deb http://archive.ubuntu.com/ubuntu/ focal-backports main restricted universe multiverse
+    - sourceline: deb http://archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse
+    include:
+    - libqt5core5a
+    - libqt5widgets5
+    - libqt5gui5
+    - libqt5network5
+    - libqt5svg5
+    - libqt5xml5
+    - libqt5opengl5
+    - libqt5webkit5
+    - libqt5printsupport5
+AppImage:
+  arch: x86_64
+  update-information: !ENV ${UPDATE_INFO}
+  sign-key: None
