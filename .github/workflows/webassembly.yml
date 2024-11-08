@@ -31,7 +31,7 @@ jobs:
         cp docker-emscripten/Dockerfile /tmp/fotowall-docker/Dockerfile
         cd /tmp/fotowall-docker
         echo "::endgroup::"
-        echo "::group::Dockerfile used to build mc_rtc"
+        echo "::group::Dockerfile used to build fotowall webassembly with emscripten"
         cat Dockerfile
         echo "::endgroup::"
         echo "::group::Build base image"
@@ -39,5 +39,27 @@ jobs:
         echo "::endgroup::"
         echo "::group::Build within docker"
         docker run --rm -v "/tmp/fotowall-docker/source:/src/" -u $(id -u):$(id -g) fotowall-ci-${{matrix.os}} 'mkdir /src/build; cd /src/build; cmake -GNinja .. && ninja'
-        ls /tmp/fotowall-docker/source/build
         echo "::endgroup::"
+        echo "::group::Create fotowall-webassembly.tar.gz archive"
+        ls /tmp/fotowall-docker/source/build
+        cd /tmp/fotowall-docker/source/build
+        mkdir fotowall-webassembly
+        cp fotowall.js fotowall.html fotowall.wasm qtloader.js qtlogo.svg fotowall-webassembly
+        tar -czf fotowall-webassembly.tar.gz fotowall-webassembly
+        echo "::endgroup::"
+    - name: Push WebAssembly to Cloudsmith 
+      id: push
+      # if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
+      uses: cloudsmith-io/action@master
+      with:
+        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+        command: "push"
+        format: "raw"
+        owner: "arntanguy"
+        repo: "head"
+        file: "/tmp/fotowall-docker/source/build/fotowall-webassembly.tar.gz"
+        tags: "latest"
+        name: "fotowall-webassembly-latest.tar.gz"
+        summary: "Upload latest webassembly build"
+        description: "See https://github.com/cloudsmith-io/action"
+        version: ${{ github.sha}}
