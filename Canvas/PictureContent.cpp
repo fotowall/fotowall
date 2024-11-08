@@ -92,9 +92,12 @@ PictureContent::~PictureContent()
   delete m_photo;
 }
 
-bool PictureContent::loadFromFile(const QString & picFilePath, bool setUrl, bool setRatio, bool setName)
+bool PictureContent::loadFromImage(const QString & picFilePath,
+                                   const QImage & img,
+                                   bool setUrl,
+                                   bool setRatio,
+                                   bool setName)
 {
-  dropNetworkConnection();
   delete m_photo;
   m_cachedPhoto = QPixmap();
   m_opaquePhoto = false;
@@ -102,7 +105,7 @@ bool PictureContent::loadFromFile(const QString & picFilePath, bool setUrl, bool
   m_netWidth = 0;
   m_netHeight = 0;
 
-  m_photo = new CPixmap(picFilePath);
+  m_photo = new CPixmap(img);
   if(m_photo->isNull())
   {
     delete m_photo;
@@ -129,6 +132,13 @@ bool PictureContent::loadFromFile(const QString & picFilePath, bool setUrl, bool
   // notify image change
   emit contentChanged();
   return true;
+}
+
+bool PictureContent::loadFromFile(const QString & picFilePath, bool setUrl, bool setRatio, bool setName)
+{
+  dropNetworkConnection();
+  auto img = QImage(picFilePath);
+  return loadFromImage(picFilePath, img, setUrl, setRatio, setName);
 }
 
 bool PictureContent::loadFromNetwork(const QString & url,

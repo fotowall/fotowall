@@ -453,6 +453,23 @@ void CanvasAppliance::slotAddPicture()
   // make up the default load path (stored as 'Fotowall/LoadImagesDir')
   QString defaultLoadPath = App::settings->value("Fotowall/LoadImagesDir").toString();
 
+#if defined(__EMSCRIPTEN__)
+  auto fileContentReady = [this](const QString & fileName, const QByteArray & fileContent)
+  {
+    if(fileName.isEmpty())
+    {
+      // No file was selected
+    }
+    else
+    {
+      // Use fileName and fileContent
+      QImage img;
+      img.loadFromData(fileContent);
+      m_extCanvas->addPictureContent(fileName, img);
+    }
+  };
+  QFileDialog::getOpenFileContent(tr("Images (%1)").arg(App::supportedImageFormats()), fileContentReady);
+#else
   // ask the file name, validate it, store back to settings and load the file
   QStringList picFilePaths = QFileDialog::getOpenFileNames(
       0, tr("Add Pictures to the Canvas"), defaultLoadPath,
@@ -460,6 +477,7 @@ void CanvasAppliance::slotAddPicture()
   if(picFilePaths.isEmpty()) return;
   App::settings->setValue("Fotowall/LoadImagesDir", QFileInfo(picFilePaths[0]).absolutePath());
   m_extCanvas->addPictureContent(picFilePaths);
+#endif
   setFocusToScene();
 }
 
