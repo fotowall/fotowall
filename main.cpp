@@ -12,7 +12,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <iostream>
 #include "App/App.h"
 #include "App/Settings.h"
 #include "Shared/RenderOpts.h"
@@ -24,6 +23,7 @@
 #include <QStyle>
 #include <QTime>
 #include <QtPlugin>
+#include <iostream>
 
 #if defined(HAS_TRANSLATIONS)
 #  include <QTranslator>
