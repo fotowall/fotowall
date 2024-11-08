@@ -12,8 +12,8 @@ find_package(
   Svg
   Xml
   OpenGL
-  WebKit
-  WebKitWidgets
+  #WebKit
+  #WebKitWidgets
   PrintSupport)
 
 message(STATUS "Qt Version is: ${Qt5_VERSION}")
@@ -228,8 +228,95 @@ set(SOURCE_FILES
 add_executable(fotowall ${SOURCE_FILES})
 add_compile_definitions(HAS_EXPORTDIALOG)
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x051200)
+if(EMSCRIPTEN)
+  # XXX needed?
+  set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
+
+  # Configure WebAssembly build settings
+  # For some reason, the build settings need to be provided through the linker.
+  # Most flags are configured to match Qt qmake
+  # See EMCC_COMMON_LFLAGS in https://github.com/qt/qtbase/blob/dev/mkspecs/wasm-emscripten/qmake.conf
+
+  # Activate Embind C/C++ bindings
+  # https://emscripten.org/docs/porting/connecting_cpp_and_javascript/embind.html
+  target_link_libraries(fotowall PUBLIC "--bind")
+
+  # Activate WebGL 2 (in addition to WebGL 1)
+  # https://emscripten.org/docs/porting/multimedia_and_graphics/OpenGL-support.html#webgl-friendly-subset-of-opengl-es-2-0-3-0
+  target_link_libraries(fotowall PUBLIC "-s USE_WEBGL2=1")
+
+  # Emulate missing OpenGL ES2/ES3 features
+  # https://emscripten.org/docs/porting/multimedia_and_graphics/OpenGL-support.html#opengl-es-2-0-3-0-emulation
+  target_link_libraries(fotowall PUBLIC "-s FULL_ES2=1")
+  #add_link_options("SHELL:-s FULL_ES3=1")
+
+  # Enable demangling of C++ stack traces
+  # https://emscripten.org/docs/porting/Debugging.html
+  target_link_libraries(fotowall PUBLIC "-s DEMANGLE_SUPPORT=1")
+
+  # Run static dtors at teardown
+  # https://emscripten.org/docs/getting_started/FAQ.html#what-does-exiting-the-runtime-mean-why-don-t-atexit-s-run
+  target_link_libraries(fotowall PUBLIC "-s EXIT_RUNTIME=0")
+
+  # Allows amount of memory used to change
+  # https://emscripten.org/docs/optimizing/Optimizing-Code.html#memory-growth
+  target_link_libraries(fotowall PUBLIC "-s ALLOW_MEMORY_GROWTH=1")
+  # target_link_libraries(fotowall PUBLIC "-s MAXIMUM_MEMORY=1GB") # required when combining USE_PTHREADS with ALLOW_MEMORY_GROWTH
+
+  # Enable C++ exception catching
+  # https://emscripten.org/docs/optimizing/Optimizing-Code.html#c-exceptions
+  target_compile_options(fotowall PUBLIC -fexceptions)
+  target_link_libraries(fotowall PUBLIC "-s DISABLE_EXCEPTION_CATCHING=0")
+
+  # Export UTF16ToString,stringToUTF16
+  # Required by https://codereview.qt-project.org/c/qt/qtbase/+/286997 (since Qt 5.14)
+  target_link_libraries(fotowall PUBLIC "-s EXTRA_EXPORTED_RUNTIME_METHODS=[UTF16ToString,stringToUTF16]")
+
+  # Enable Fetch API
+  # https://emscripten.org/docs/api_reference/fetch.html
+  target_link_libraries(fotowall PUBLIC "-s FETCH=1")
+
+  # Deploy default qt html/loader files
+  if(NOT ARGWASM_DISABLE_DEPLOYMENT)
+    get_filename_component(QT_WASM_QT_ROOT "${Qt5Core_DIR}/../../.." ABSOLUTE)
+    message(STATUS "Found Qt SDK Root: ${QT_WASM_QT_ROOT}")
+
+
+    if(NOT ARGWASM_NAME OR ARGWASM_NAME STREQUAL "")
+      set(ARGWASM_NAME fotowall)
+    endif()
+
+    # APPNAME will configure html file
+    set(APPNAME fotowall)
+
+    get_target_property(TARGET_OUTPUT_FOLDER fotowall RUNTIME_OUTPUT_DIRECTORY)
+
+    configure_file("${QT_WASM_QT_ROOT}/plugins/platforms/wasm_shell.html"
+                   "${CMAKE_CURRENT_BINARY_DIR}/${ARGWASM_NAME}.html")
+
+    add_custom_command(TARGET fotowall POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/${ARGWASM_NAME}.html" "$<TARGET_FILE_DIR:fotowall>"
+      COMMENT "Deploy ${CMAKE_CURRENT_BINARY_DIR}/${ARGWASM_NAME}.html")
+
+    configure_file("${QT_WASM_QT_ROOT}/plugins/platforms/qtloader.js"
+                  "${CMAKE_CURRENT_BINARY_DIR}/qtloader.js" COPYONLY)
+
+    add_custom_command(TARGET fotowall POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/qtloader.js" "$<TARGET_FILE_DIR:fotowall>"
+      COMMENT "Deploy ${CMAKE_CURRENT_BINARY_DIR}/qtloader.js")
+
+    configure_file("${QT_WASM_QT_ROOT}/plugins/platforms/qtlogo.svg"
+                   "${CMAKE_CURRENT_BINARY_DIR}/qtlogo.svg" COPYONLY)
+
+    add_custom_command(TARGET fotowall POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/qtlogo.svg" "$<TARGET_FILE_DIR:fotowall>"
+      COMMENT "Deploy ${CMAKE_CURRENT_BINARY_DIR}/qtlogo.svg")
+  endif()
+endif()
+
 target_link_libraries(
   fotowall
+  PUBLIC
   Qt5::Gui
   Qt5::Widgets
   Qt5::Xml
@@ -237,8 +324,8 @@ target_link_libraries(
   Qt5::Svg
   Qt5::OpenGL
   Qt5::Core
-  Qt5::WebKit
-  Qt5::WebKitWidgets
+  #Qt5::WebKit
+  #Qt5::WebKitWidgets
   Qt5::PrintSupport
   X11)
 target_include_directories(fotowall

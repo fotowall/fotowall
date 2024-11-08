@@ -12,6 +12,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <iostream>
 #include "App/App.h"
 #include "App/Settings.h"
 #include "Shared/RenderOpts.h"
@@ -54,6 +55,7 @@ QColor RenderOpts::hiColor;
 
 int main(int argc, char ** args)
 {
+  std::cout << "Hello from Fotowall" << std::endl;
 #if defined(Q_OS_LINUX) && (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   // use the Raster GraphicsSystem on X11
   QApplication::setGraphicsSystem("raster");
