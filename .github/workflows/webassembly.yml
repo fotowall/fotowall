@@ -1,0 +1,43 @@
+name: Build WebAssembly of fotowall
+on:
+  push:
+    paths-ignore:
+      # Changes to those files don't mandate running CI
+      - ".github/workflows/package.yml"
+      - ".github/workflows/build.yml"
+      - "debian/**"
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build-webassembly:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu_22.04"]
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Build within Docker
+      run: |
+        echo "::group::Setup Dockerfile"
+        mkdir -p /tmp/fotowall-docker
+        cp -r `pwd` /tmp/fotowall-docker/source
+        cp docker-emscripten/Dockerfile /tmp/fotowall-docker/Dockerfile
+        cd /tmp/fotowall-docker
+        echo "::endgroup::"
+        echo "::group::Dockerfile used to build mc_rtc"
+        cat Dockerfile
+        echo "::endgroup::"
+        echo "::group::Build base image"
+        docker build -t fotowall-ci-${{matrix.os}} .
+        echo "::endgroup::"
+        echo "::group::Build within docker"
+        docker run --rm -v "/tmp/fotowall-docker/source:/src/" -u $(id -u):$(id -g) fotowall-ci-${{matrix.os}} 'mkdir /src/build; cd /src/build; cmake -GNinja .. && ninja'
+        ls /tmp/fotowall-docker/source/build
+        echo "::endgroup::"
