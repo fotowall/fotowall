@@ -16,6 +16,7 @@
 
 #include "Wordcloud/Scanner.h"
 
+#include <QDebug>
 #include <QFileDialog>
 #include <QGraphicsScene>
 #include <QInputDialog>
@@ -43,16 +44,39 @@ void WordcloudContent::manualInitialization()
   // temporarily get words
   Wordcloud::Scanner scanner;
   QString txtFilePath = QFileDialog::getOpenFileName(0, tr("Create a Wordcloud from a text file"));
+  QString txtContent = tr("Welcome to Wordcloud. Change options on the sidebar.");
+
+#if defined(__EMSCRIPTEN__)
+  auto fileContentReady = [this, &txtContent](const QString & fileName, const QByteArray & fileContent)
+  {
+    if(fileName.isEmpty())
+    {
+      // No file was selected
+    }
+    else
+    {
+      // Use fileName and fileContent
+      //
+      txtContent = QString(fileContent);
+    }
+  };
+  QFileDialog::getOpenFileContent(tr("Text files (%1)").arg(*), fileContentReady);
+#else
+  QFile file(txtFilePath);
+  if(!file.open(QIODevice::ReadOnly)) return;
+  QString fileContent = file.readAll();
+  if(!fileContent.isEmpty()) { txtContent = fileContent; }
+#endif
 
   // from file
-  if(!txtFilePath.isEmpty())
+  if(!txtContent.isEmpty())
   {
     // ask how many characters (at least) per word
     bool ok = false;
     int minLength = QInputDialog::getInt(0, tr("Minimum word length"), tr("Longer or equal to:"), 3, 1, 20, 1, &ok);
     if(ok) scanner.setMinimumWordLength(minLength);
 
-    scanner.addFromFile(txtFilePath);
+    scanner.addFromString(txtContent);
 
     // ask how many words (at most)
     int maxCount =
@@ -62,18 +86,6 @@ void WordcloudContent::manualInitialization()
     m_cloud->newCloud(scanner.takeWords(true, maxCount));
     return;
   }
-
-  // add few words if a file is not selected
-  scanner.addFromString(tr("Welcome to Wordcloud. Change options on the sidebar."));
-  Wordcloud::WordList list = scanner.takeWords(false, 100);
-  Wordcloud::WordList::iterator wIt = list.begin();
-  int ccc = list.size() + 1;
-  while(wIt != list.end())
-  {
-    wIt->count = ccc--;
-    ++wIt;
-  }
-  m_cloud->newCloud(list);
 }
 
 bool WordcloudContent::fromXml(const QDomElement & contentElement, const QDir & baseDir)
