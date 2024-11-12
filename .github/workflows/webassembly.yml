@@ -64,33 +64,20 @@ jobs:
         summary: "Upload latest webassembly build"
         description: "See https://github.com/cloudsmith-io/action"
         version: ${{ github.sha}}
-    # - name: Copy to fotowall.arntanguy.fr
-    #   uses: pierrickdelrieu/scp-action@v0.1.0
-    #   with:
-    #     host: arntanguy.fr 
-    #     ssh_port: ${{ secrets.ARNTANGUY_SSH_PORT }}
-    #     ssh_username: ${{ secrets.ARNTANGUY_USERNAME }}
-    #     ssh_key: ${{ secrets.ARNTANGUY_SSH_PRIVATE_KEY }}
-    #     source_dir: "/tmp/fotowall-docker/source/build/fotowall-webassembly"
-    #     destination_dir: "/home/${{ secrets.ARNTANGUY_USERNAME }}/fotowall.arntanguy.fr" 
-    # - name: rsync deployments
-    #   uses: burnett01/rsync-deployments@5.2
-    #   with:
-    #     switches: -avzr --delete --dry-run
-    #     path: /home/runner/work/fotowall/fotowall/fotowall-webassembly
-    #     remote_path: /home/ubuntu/fotowall.arntanguy.fr
-    #     remote_host: arntanguy.fr 
-    #     remote_user: ubuntu
-    #     remote_key: ${{ secrets.ARNTANGUY_SSH_PRIVATE_KEY }}
-    - name: Rsync Deploy
-      env:
-        # define SSH/Rsync destination environment var
-        dest: 'ubuntu@arntanguy.fr:/var/www/html/fotowall.arntanguy.fr'
-      run: |
-        echo "${{secrets.ARNTANGUY_SSH_PRIVATE_KEY}}" > deploy_key
-        chmod 600 ./deploy_key
-        # WARNING: danger zone here, use --dry-run for any changes
-        rsync -chrlvzi --delete \
-          -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
-          --exclude '/deploy_key' \
-          /tmp/fotowall-docker/source/build/fotowall-webassembly/ ${{env.dest}}
+    # - name: Rsync Deploy
+    #   env:
+    #     # define SSH/Rsync destination environment var
+    #     dest: 'ubuntu@arntanguy.fr:/var/www/html/fotowall.arntanguy.fr'
+    #   run: |
+    #     echo "${{secrets.ARNTANGUY_SSH_PRIVATE_KEY}}" > deploy_key
+    #     chmod 600 ./deploy_key
+    #     # WARNING: danger zone here, use --dry-run for any changes
+    #     rsync -chrlvzi --delete \
+    #       -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
+    #       --exclude '/deploy_key' \
+    #       /tmp/fotowall-docker/source/build/fotowall-webassembly/ ${{env.dest}}
+
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: /tmp/fotowall-docker/source/build/fotowall-webassembly # The folder the action should deploy.
