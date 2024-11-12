@@ -6,6 +6,9 @@ on:
       - ".github/workflows/package.yml"
       - ".github/workflows/build.yml"
       - "debian/**"
+      - "README.md"
+      - "doc/**"
+      - ".pre-commit-config.yaml"
     branches:
       - '**'
   pull_request:
@@ -64,10 +67,10 @@ jobs:
         summary: "Upload latest webassembly build"
         description: "See https://github.com/cloudsmith-io/action"
         version: ${{ github.sha}}
-    # - name: Rsync Deploy
+    # - name: Rsync Deploy to fotowall.arntanguy.fr
     #   env:
     #     # define SSH/Rsync destination environment var
-    #     dest: 'ubuntu@arntanguy.fr:/var/www/html/fotowall.arntanguy.fr'
+    #     dest: 'ubuntu@arntanguy.fr:/home/ubuntu/fotowall.arntanguy.fr'
     #   run: |
     #     echo "${{secrets.ARNTANGUY_SSH_PRIVATE_KEY}}" > deploy_key
     #     chmod 600 ./deploy_key
@@ -77,7 +80,7 @@ jobs:
     #       --exclude '/deploy_key' \
     #       /tmp/fotowall-docker/source/build/fotowall-webassembly/ ${{env.dest}}
 
-    - name: Deploy 🚀
+    - name: Deploy to gh-pages 🚀
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: /tmp/fotowall-docker/source/build/fotowall-webassembly # The folder the action should deploy.
