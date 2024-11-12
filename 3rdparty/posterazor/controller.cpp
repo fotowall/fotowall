@@ -463,8 +463,10 @@ bool Controller::loadInputImage(const QString &imageFileName, QString &errorMess
 int Controller::savePoster(const QString &fileName) const
 {
     const int result = m_posteRazorCore->savePoster(fileName);
+#if !defined(__EMSCRIPTEN__)
     if (result == 0 && m_launchPDFApplication)
         QDesktopServices::openUrl(QUrl::fromLocalFile(fileName));
+#endif
     return result;
 }
 
@@ -472,6 +474,14 @@ void Controller::savePoster() const
 {
     QSettings savePathSettings;
 
+#if defined(__EMSCRIPTEN__)
+    QString saveFileName = "fotowall_poster.pdf"; // save to local browser storage
+    int result = savePoster(saveFileName.toLatin1());
+    if (result != 0)
+    {
+       QMessageBox::critical(m_view, "", QCoreApplication::translate("Main window", "The file '%1' could not be saved.").arg(saveFileName), QMessageBox::Ok, QMessageBox::NoButton);
+    }
+#else
     QString saveFileName = savePathSettings.value(settingsKey_PosterSavePath,
 #if QT_VERSION >= 0x040400
            QStandardPaths::DocumentsLocation
@@ -513,6 +523,7 @@ void Controller::savePoster() const
             break;
         }
     } while (fileExistsAskUserForOverwrite);
+#endif
 }
 
 void Controller::loadTranslation(const QString &localeName)

@@ -32,6 +32,12 @@
 #include <QBrush>
 #include <math.h>
 
+#if defined(__EMSCRIPTEN__)
+#include <QFile>
+#include <QFileDialog>
+#include <iostream>
+#endif
+
 const QLatin1String defaultValue_PaperFormat(           "DIN A4");
 
 const QLatin1String settingsKey_PosterSizeMode(         "PosterSizeMode");
@@ -805,6 +811,16 @@ int PosteRazorCore::savePoster(const QString &fileName) const
         }
         err = pdfWriter.finishSaving();
     }
+
+#if defined(__EMSCRIPTEN__)
+  QFile pdfFile("fotowall_poster.pdf"); // Read PDF stored in local browser storage
+  pdfFile.open(QIODevice::ReadOnly);
+  QByteArray content = pdfFile.readAll();
+  std::cout << "Content size is " << content.size() << std::endl;
+  pdfFile.remove();
+
+  QFileDialog::saveFileContent(content, "fotowall_poster.pdf"); // download pdf
+#endif
 
     return err;
 }

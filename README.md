@@ -76,7 +76,8 @@ Fotowall is also available to use on-line directly from your web browser. Note t
 | Saving Fotowall projects | No | Doing so would require a way of downloading all images as well as saving the project |
 | Loading Fotowall projects | No | Doing so would require a way of uploading all images as well as saving the project |
 | All in-canvas operations | Yes | You can perform all usual operations on images/text on your canvas |
-| Exporting the canvas | Upcoming | You can export the canvas in all the usual formats, including as a poster |
+| Exporting the canvas | Upcoming | You can export the canvas in all the usual formats |
+| Posterazor | Upcoming | |
 | Live camera | No | |
 
 ** [Try it out here](https://arntanguy.github.io/fotowall/fotowall.html) **

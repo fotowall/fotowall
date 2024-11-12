@@ -51,7 +51,7 @@ jobs:
         tar -czf fotowall-webassembly.tar.gz fotowall-webassembly
         cp -r fotowall-webassembly /home/runner/work/fotowall/fotowall
         echo "::endgroup::"
-    - name: Push WebAssembly to Cloudsmith 
+    - name: Push WebAssembly to Cloudsmith
       id: push
       # if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
       uses: cloudsmith-io/action@master
