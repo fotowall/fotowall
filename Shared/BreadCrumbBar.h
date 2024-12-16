@@ -75,7 +75,7 @@ public:
   bool last() const;
 
   // ::QWidget
-  void enterEvent(QEvent * event);
+  void enterEvent(QEnterEvent * event);
   void leaveEvent(QEvent * event);
   void keyPressEvent(QKeyEvent * event);
   void mousePressEvent(QMouseEvent * event);

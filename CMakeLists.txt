@@ -2,20 +2,34 @@ cmake_minimum_required(VERSION 3.1)
 project(fotowall)
 
 find_package(
-  Qt5
-  COMPONENTS
-  REQUIRED
-  Core
-  Widgets
-  Gui
-  Network
-  Svg
-  Xml
-  OpenGL
-  # WebKit WebKitWidgets
-  PrintSupport)
-
-message(STATUS "Qt Version is: ${Qt5_VERSION}")
+  Qt6 QUIET
+  COMPONENTS Core
+             Widgets
+             Gui
+             Network
+             Svg
+             Xml
+             OpenGL
+             OpenGLWidgets
+             PrintSupport)
+if(Qt6_FOUND)
+  message(STATUS "Found Qt6")
+  message(STATUS "Qt6 Version is: ${Qt6_VERSION}")
+else()
+  find_package(
+    Qt5
+    COMPONENTS
+    REQUIRED
+    Core
+    Widgets
+    Gui
+    Network
+    Svg
+    Xml
+    OpenGL
+    PrintSupport)
+  message(STATUS "Qt5 Version is: ${Qt5_VERSION}")
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -26,11 +40,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/fotowall.qrc
-    ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack.h
-    ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack_p.h
-    ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBackDialog.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBackDialog.h
+    # ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack.cpp
+    # ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack.h
+    # ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack_p.h
+    # ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBackDialog.cpp
+    # ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBackDialog.h
     ${CMAKE_SOURCE_DIR}/3rdparty/pencil/FloodGenerator.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/pencil/FloodGenerator.h
     ${CMAKE_SOURCE_DIR}/3rdparty/pencil/FloodPoly.cpp
@@ -70,8 +84,8 @@ set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/3rdparty/videocapture/VideoInput.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/videocapture/VideoInput.h
     ${CMAKE_SOURCE_DIR}/3rdparty/enricomath.h
-    ${CMAKE_SOURCE_DIR}/3rdparty/gsuggest.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/gsuggest.h
+    # ${CMAKE_SOURCE_DIR}/3rdparty/gsuggest.cpp
+    # ${CMAKE_SOURCE_DIR}/3rdparty/gsuggest.h
     ${CMAKE_SOURCE_DIR}/App/App.cpp
     ${CMAKE_SOURCE_DIR}/App/App.h
     ${CMAKE_SOURCE_DIR}/App/CanvasAppliance.cpp
@@ -166,8 +180,8 @@ set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/Shared/PictureServices/AbstractPictureService.h
     ${CMAKE_SOURCE_DIR}/Shared/PictureServices/FlickrPictureService.cpp
     ${CMAKE_SOURCE_DIR}/Shared/PictureServices/FlickrPictureService.h
-    ${CMAKE_SOURCE_DIR}/Shared/PictureServices/GoogleImagesPictureService.cpp
-    ${CMAKE_SOURCE_DIR}/Shared/PictureServices/GoogleImagesPictureService.h
+    # ${CMAKE_SOURCE_DIR}/Shared/PictureServices/GoogleImagesPictureService.cpp
+    # ${CMAKE_SOURCE_DIR}/Shared/PictureServices/GoogleImagesPictureService.h
     ${CMAKE_SOURCE_DIR}/Shared/PlugGui/AbstractAppliance.cpp
     ${CMAKE_SOURCE_DIR}/Shared/PlugGui/AbstractAppliance.h
     ${CMAKE_SOURCE_DIR}/Shared/PlugGui/Container.cpp
@@ -327,18 +341,34 @@ if(EMSCRIPTEN)
   endif()
 endif()
 
-target_link_libraries(
-  fotowall
-  PUBLIC Qt5::Gui
-         Qt5::Widgets
-         Qt5::Xml
-         Qt5::Network
-         Qt5::Svg
-         Qt5::OpenGL
-         Qt5::Core
-         # Qt5::WebKit Qt5::WebKitWidgets
-         Qt5::PrintSupport
-         X11)
+if(Qt5_FOUND)
+  target_link_libraries(
+    fotowall
+    PUBLIC Qt5::Gui
+           Qt5::Widgets
+           Qt5::Xml
+           Qt5::Network
+           Qt5::Svg
+           Qt5::OpenGL
+           Qt5::Core
+           # Qt5::WebKit Qt5::WebKitWidgets
+           Qt5::PrintSupport
+           X11)
+elseif(Qt6_FOUND)
+  target_link_libraries(
+    fotowall
+    PUBLIC Qt6::Gui
+           Qt6::Widgets
+           Qt6::Xml
+           Qt6::Network
+           Qt6::Svg
+           Qt6::OpenGL
+           Qt6::OpenGLWidgets
+           Qt6::Core
+           # Qt6::WebKit Qt6::WebKitWidgets
+           Qt6::PrintSupport
+           X11)
+endif()
 target_include_directories(fotowall
                            PRIVATE ${CMAKE_SOURCE_DIR}/3rdparty/posterazor/)
 

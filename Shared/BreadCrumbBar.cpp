@@ -54,7 +54,7 @@ void BcLabel::setLast(bool last)
 bool BcLabel::last() const
 { return m_last; }
 
-void BcLabel::enterEvent(QEvent * event)
+void BcLabel::enterEvent(QEnterEvent * event)
 {
   QLabel::enterEvent(event);
   m_hover = true;

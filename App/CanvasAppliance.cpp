@@ -32,7 +32,6 @@
 #include "Workflow.h"
 
 #include <QActionGroup>
-#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMenu>
