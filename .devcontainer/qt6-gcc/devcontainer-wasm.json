@@ -12,7 +12,7 @@
 
   "containerEnv":
   {
-    "CMAKE_PREFIX_PATH": "/opt/Qt/6.6.1/gcc_64/lib/cmake",
+    "CMAKE_PREFIX_PATH": "/opt/Qt/6.6.1/gcc_64/lib/cmake"
     "QT_HOST_PATH": "/opt/Qt/6.6.1/gcc_64"
   },
 

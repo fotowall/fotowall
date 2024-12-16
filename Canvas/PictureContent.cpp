@@ -33,7 +33,9 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QPainter>
-#include <QProcess>
+#if !defined(__EMSCRIPTEN__)
+#  include <QProcess>
+#endif
 #include <QTimer>
 #include <QUrl>
 
@@ -605,17 +607,19 @@ void PictureContent::setExternalEdit(bool enabled)
       return;
     }
 
+#if !defined(__EMSCRIPTEN__)
     // open it with the gimp
-#if defined(Q_OS_WIN) || defined(Q_OS_OS2)
+#  if defined(Q_OS_WIN) || defined(Q_OS_OS2)
     QString executable = "gimp.exe";
-#else
+#  else
     QString executable = "gimp";
-#endif
+#  endif
     if(!QProcess::startDetached(executable, QStringList() << tmpFile))
     {
       qWarning("PictureContent::slotGimpEdit: can't start The Gimp");
       return;
     }
+#endif
 
     // start a watcher over it
     delete m_watcher;

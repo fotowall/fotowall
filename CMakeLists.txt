@@ -238,7 +238,11 @@ set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/Wordcloud/WordItem.h
     ${CMAKE_SOURCE_DIR}/main.cpp)
 
-add_executable(fotowall ${SOURCE_FILES})
+if(Qt6_FOUND)
+  qt_add_executable(fotowall ${SOURCE_FILES})
+else()
+  add_executable(fotowall ${SOURCE_FILES})
+endif()
 add_compile_definitions(HAS_EXPORTDIALOG)
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x051200)
 if(EMSCRIPTEN)
@@ -290,55 +294,6 @@ if(EMSCRIPTEN)
 
   # Enable Fetch API https://emscripten.org/docs/api_reference/fetch.html
   target_link_libraries(fotowall PUBLIC "-s FETCH=1")
-
-  # Deploy default qt html/loader files
-  if(NOT ARGWASM_DISABLE_DEPLOYMENT)
-    get_filename_component(QT_WASM_QT_ROOT "${Qt5Core_DIR}/../../.." ABSOLUTE)
-    message(STATUS "Found Qt SDK Root: ${QT_WASM_QT_ROOT}")
-
-    if(NOT ARGWASM_NAME OR ARGWASM_NAME STREQUAL "")
-      set(ARGWASM_NAME fotowall)
-    endif()
-
-    # APPNAME will configure html file
-    set(APPNAME fotowall)
-
-    get_target_property(TARGET_OUTPUT_FOLDER fotowall RUNTIME_OUTPUT_DIRECTORY)
-
-    configure_file("${QT_WASM_QT_ROOT}/plugins/platforms/wasm_shell.html"
-                   "${CMAKE_CURRENT_BINARY_DIR}/${ARGWASM_NAME}.html")
-
-    add_custom_command(
-      TARGET fotowall
-      POST_BUILD
-      COMMAND
-        ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_BINARY_DIR}/${ARGWASM_NAME}.html"
-        "$<TARGET_FILE_DIR:fotowall>"
-      COMMENT "Deploy ${CMAKE_CURRENT_BINARY_DIR}/${ARGWASM_NAME}.html")
-
-    configure_file("${QT_WASM_QT_ROOT}/plugins/platforms/qtloader.js"
-                   "${CMAKE_CURRENT_BINARY_DIR}/qtloader.js" COPYONLY)
-
-    add_custom_command(
-      TARGET fotowall
-      POST_BUILD
-      COMMAND
-        ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_BINARY_DIR}/qtloader.js" "$<TARGET_FILE_DIR:fotowall>"
-      COMMENT "Deploy ${CMAKE_CURRENT_BINARY_DIR}/qtloader.js")
-
-    configure_file("${QT_WASM_QT_ROOT}/plugins/platforms/qtlogo.svg"
-                   "${CMAKE_CURRENT_BINARY_DIR}/qtlogo.svg" COPYONLY)
-
-    add_custom_command(
-      TARGET fotowall
-      POST_BUILD
-      COMMAND
-        ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_BINARY_DIR}/qtlogo.svg" "$<TARGET_FILE_DIR:fotowall>"
-      COMMENT "Deploy ${CMAKE_CURRENT_BINARY_DIR}/qtlogo.svg")
-  endif()
 endif()
 
 if(Qt5_FOUND)
