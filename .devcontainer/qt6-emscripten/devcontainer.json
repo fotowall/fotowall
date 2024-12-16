@@ -1,9 +1,16 @@
 {
+  "name": "qt6-emscripten",
+
   "build": { "dockerfile": "Dockerfile" },
 
   "features":
   {
     "ghcr.io/duduribeiro/devcontainer-features/neovim:1": { "version": "nightly" },
+  },
+
+  "containerEnv":
+  {
+    "CMAKE_PREFIX_PATH": "/opt/Qt/6.6.1/gcc_64/lib/cmake"
   },
 
     // Configure tool-specific properties.
@@ -16,5 +23,5 @@
       ]
     }
   }
-
+    
 }
