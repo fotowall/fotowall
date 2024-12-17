@@ -26,34 +26,45 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
-    - name: Build within Docker
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and run Dev Container task
+      uses: devcontainers/ci@v0.3
+      with:
+        # Change this to point to your image name
+        imageName: ghcr.io/fotowall/qt6-emscripten
+        configFile: ./.devcontainer/qt6-emscripten/devcontainer.json
+        refFilterForPush: refs/heads/master
+        # Change this to be your CI task/script
+        runCmd: |
+          # Add multiple commands to run if needed
+          mkdir build
+          cd build
+          qt-cmake -GNinja ..
+          ninja
+
+    - name: Bundle Webassembly Files
       run: |
-        echo "::group::Setup Dockerfile"
-        mkdir -p /tmp/fotowall-docker
-        cp -r `pwd` /tmp/fotowall-docker/source
-        cp docker-emscripten/Dockerfile /tmp/fotowall-docker/Dockerfile
-        cd /tmp/fotowall-docker
-        echo "::endgroup::"
-        echo "::group::Dockerfile used to build fotowall webassembly with emscripten"
-        cat Dockerfile
-        echo "::endgroup::"
-        echo "::group::Build base image"
-        docker build -t fotowall-ci-${{matrix.os}} .
-        echo "::endgroup::"
-        echo "::group::Build within docker"
-        docker run --rm -v "/tmp/fotowall-docker/source:/src/" -u $(id -u):$(id -g) fotowall-ci-${{matrix.os}} 'mkdir /src/build; cd /src/build; cmake -GNinja .. && ninja'
-        echo "::endgroup::"
-        echo "::group::Create fotowall-webassembly.tar.gz archive"
-        ls /tmp/fotowall-docker/source/build
-        cd /tmp/fotowall-docker/source/build
+        echo "::group::Bundle files"
+        cd $GITHUB_WORKSPACE/build
         mkdir fotowall-webassembly
         cp fotowall.js fotowall.html fotowall.wasm qtloader.js qtlogo.svg fotowall-webassembly
         tar -czf fotowall-webassembly.tar.gz fotowall-webassembly
         cp -r fotowall-webassembly /home/runner/work/fotowall/fotowall
         echo "::endgroup::"
+        echo "::group::List files"
+        ls -R $GITHUB_WORKSPACE/build/fotowall-webassembly
+        echo "::endgroup::"
+
     - name: Push WebAssembly to Cloudsmith
       id: push
-      # if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
+      if: github.ref == 'refs/heads/topic/WebAssembly' && github.repository == 'arntanguy/fotowall'
       uses: cloudsmith-io/action@master
       with:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -61,26 +72,15 @@ jobs:
         format: "raw"
         owner: "arntanguy"
         repo: "head"
-        file: "/tmp/fotowall-docker/source/build/fotowall-webassembly.tar.gz"
+        file: "$GITHUB_WORKSPACE/build/fotowall-webassembly.tar.gz"
         tags: "latest"
         name: "fotowall-webassembly-latest.tar.gz"
         summary: "Upload latest webassembly build"
         description: "See https://github.com/cloudsmith-io/action"
         version: ${{ github.sha}}
-    # - name: Rsync Deploy to fotowall.arntanguy.fr
-    #   env:
-    #     # define SSH/Rsync destination environment var
-    #     dest: 'ubuntu@arntanguy.fr:/home/ubuntu/fotowall.arntanguy.fr'
-    #   run: |
-    #     echo "${{secrets.ARNTANGUY_SSH_PRIVATE_KEY}}" > deploy_key
-    #     chmod 600 ./deploy_key
-    #     # WARNING: danger zone here, use --dry-run for any changes
-    #     rsync -chrlvzi --delete \
-    #       -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
-    #       --exclude '/deploy_key' \
-    #       /tmp/fotowall-docker/source/build/fotowall-webassembly/ ${{env.dest}}
 
     - name: Deploy to gh-pages 🚀
+      if: github.ref == 'refs/heads/topic/WebAssembly' && github.repository == 'arntanguy/fotowall'
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        folder: /tmp/fotowall-docker/source/build/fotowall-webassembly # The folder the action should deploy.
+        folder: build/fotowall-webassembly # The folder the action should deploy.
