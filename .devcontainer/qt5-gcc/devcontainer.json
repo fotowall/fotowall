@@ -1,0 +1,10 @@
+{
+  "name": "qt5-gcc",
+  "build": { "dockerfile": "Dockerfile" },
+
+  "features":
+  {
+    "ghcr.io/duduribeiro/devcontainer-features/neovim:1": { "version": "nightly" },
+  }
+
+}

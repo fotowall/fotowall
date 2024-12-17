@@ -91,7 +91,7 @@ QIcon createIconSet(QString iconName)
 #include <QtGui/QTextBlock>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocument>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     #include <QtGui/QAction>
 #else
     #include <QtWidgets/QAction>
