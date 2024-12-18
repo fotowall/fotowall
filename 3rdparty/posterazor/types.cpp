@@ -105,7 +105,7 @@ const QHash<QString, QSizeF> &Types::paperFormats()
     return formats;
 }
 
-QSizeF Types::paperSize(const QString &format, PaperLayout::Orientation orientation, UnitsOfLength unit)
+QSizeF Types::paperSize(const QString &format, QPageLayout::Orientation orientation, UnitsOfLength unit)
 {
     QSizeF result = paperFormats().value(format);
     if (orientation == QPageLayout::Landscape)
