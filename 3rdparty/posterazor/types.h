@@ -28,12 +28,6 @@
 #include <QString>
 #include <QPrinter>
 
-#if QT_VERSION >= 0x060000
-    using PaperLayout = QPageLayout;
-#else
-    using PaperLayout = QPrinter;
-#endif
-
 
 class Types
 {
@@ -68,7 +62,7 @@ public:
     static QSizeF convertBetweenUnitsOfLength(const QSizeF &size, UnitsOfLength sourceUnit, UnitsOfLength targetUnit);
     static UnitsOfLength unitOfLenthFromString(const QString &string);
     static const QHash<QString, QSizeF> &paperFormats();
-    static QSizeF paperSize(const QString &format, PaperLayout::Orientation orientation, UnitsOfLength unit);
+    static QSizeF paperSize(const QString &format, QPageLayout::Orientation orientation, UnitsOfLength unit);
 
     // These two functions help to format help text. I know, they do not belong, here.
     static QString cleanString(const QString &dirtyString);
