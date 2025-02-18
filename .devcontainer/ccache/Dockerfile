@@ -5,8 +5,12 @@ ARG UBUNTU_VERSION="jammy"
 
 RUN export DEBIAN_FRONTEND=noninteractive
 
+# Allow to keep apt cache between builds
+RUN rm -f /etc/apt/apt.conf.d/docker-clean
+
 # Install latest cmake version
-RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
+RUN --mount=type=cache,target=/var/cache/apt \
+  wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
  && echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null \
  && apt update \
  && rm /usr/share/keyrings/kitware-archive-keyring.gpg \
@@ -14,7 +18,8 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
  && apt-get update \
  && apt-get install -y --no-install-recommends cmake
 
-RUN apt-get -y install --no-install-recommends ccache python3-venv python3-pip ripgrep cmake qtbase5-dev libqt5svg5-dev libqt5webkit5-dev libqt5opengl5-dev
+RUN --mount=type=cache,target=/var/cache/apt \
+  apt-get -y install --no-install-recommends ccache python3-venv python3-pip ripgrep cmake qtbase5-dev libqt5svg5-dev libqt5webkit5-dev libqt5opengl5-dev
 
 
 # Git now forces you to have an email
@@ -23,20 +28,46 @@ RUN git config --global user.email "${EMAIL}" && git config --global user.name "
 
 # Add mc-rtc-superbuild to the build context
 USER vscode
+
+# Mount cache ccache folder
+RUN --mount=type=cache,uid=1000,gid=1000,target=/home/vscode/.cache/ccache \
+  if [ "$(ls -A /home/vscode/.cache/ccache)" ]; then \
+    echo "CCache Mount Directory is not empty, using it"; \
+    ls -A /home/vscode/.cache/ccache; \
+  else \
+    echo "ccache mount directory is empty"; \
+    if [ -d "/home/vscode/.cache/ccache_image" ]; then \
+      echo "A cache from a previous build was found, seed ~/.cache_image with it"; \
+      cp -r /home/vscode/.cache/ccache_image/* /home/vscode/.cache/ccache; \
+      ls -A /home/vscode/.cache/ccache; \
+    fi \
+  fi
+
 RUN echo trest
 RUN echo ttt
 RUN git config --global user.email "${EMAIL}" && git config --global user.name "${NAME}"
 COPY --chown=vscode:vscode ../.. /home/vscode/build_context/fotowall
 WORKDIR /home/vscode/build_context/fotowall
 RUN ls -al
-RUN cmake --preset release
-# Build everything to populate ccache
-RUN cmake --build --preset release
-RUN ccache -z
-RUN rm -rf build
-RUN cmake --preset release
-# Build everything to populate ccache
-RUN cmake --build --preset release
-RUN ccache -s
+RUN --mount=type=cache,uid=1000,gid=1000,target=/home/vscode/.cache/ccache \
+  ccache -z \
+  && cmake --preset release \
+  # Build everything to populate ccache
+  && cmake --build --preset release \
+  && ccache -s
+
+RUN --mount=type=cache,uid=1000,gid=1000,target=/home/vscode/.cache/ccache \
+  ccache -z \
+  && rm -rf build \
+  && cmake --preset release \
+  # Build everything to populate ccache
+  && cmake --build --preset release \
+  && ccache -s
+
+RUN --mount=type=cache,uid=1000,gid=1000,target=/home/vscode/.cache/ccache \
+  ccache -z \
+  && echo "Copying ccache /home/vscode/.cache/ccache to the image folder /home/vscode/.cache/.ccache_image" \
+  && mkdir -p /home/vscode/.cache/ccache_image \
+  && cp -r /home/vscode/.cache/ccache/* /home/vscode/.cache/ccache_image
 
 ENTRYPOINT ["/bin/bash", "-c"]
