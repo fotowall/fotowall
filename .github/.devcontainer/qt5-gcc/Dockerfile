@@ -26,7 +26,6 @@ RUN --mount=type=cache,target=/var/cache/apt \
 # TODO: remove this (leaving it now to preserve cache)
 RUN git config --global user.email "${EMAIL}" && git config --global user.name "${NAME}"
 
-# Add mc-rtc-superbuild to the build context
 USER vscode
 
 # Mount cache ccache folder
@@ -36,18 +35,11 @@ RUN --mount=type=cache,uid=1000,gid=1000,target=/home/vscode/.cache/ccache \
     ls -A /home/vscode/.cache/ccache; \
   else \
     echo "ccache mount directory is empty"; \
-    if [ -d "/home/vscode/.cache/ccache_image" ]; then \
-      echo "A cache from a previous build was found, seed ~/.cache_image with it"; \
-      cp -r /home/vscode/.cache/ccache_image/* /home/vscode/.cache/ccache; \
-      ls -A /home/vscode/.cache/ccache; \
-    fi \
   fi
 
-RUN echo trest
-RUN echo ttt
 RUN git config --global user.email "${EMAIL}" && git config --global user.name "${NAME}"
-COPY --chown=vscode:vscode ../.. /home/vscode/build_context/fotowall
-WORKDIR /home/vscode/build_context/fotowall
+COPY --chown=vscode:vscode ../../.. /home/vscode/workspace/fotowall
+WORKDIR /home/vscode/workspace/fotowall
 RUN ls -al
 RUN --mount=type=cache,uid=1000,gid=1000,target=/home/vscode/.cache/ccache \
   ccache -z \
@@ -57,17 +49,10 @@ RUN --mount=type=cache,uid=1000,gid=1000,target=/home/vscode/.cache/ccache \
   && ccache -s
 
 RUN --mount=type=cache,uid=1000,gid=1000,target=/home/vscode/.cache/ccache \
-  ccache -z \
-  && rm -rf build \
-  && cmake --preset release \
-  # Build everything to populate ccache
-  && cmake --build --preset release \
-  && ccache -s
+  echo "Copying ccache /home/vscode/.cache/ccache to the image folder /tmp/.ccache" \
+  && cp -r /home/vscode/.cache/ccache /tmp/.ccache
 
-RUN --mount=type=cache,uid=1000,gid=1000,target=/home/vscode/.cache/ccache \
-  ccache -z \
-  && echo "Copying ccache /home/vscode/.cache/ccache to the image folder /home/vscode/.cache/.ccache_image" \
-  && mkdir -p /home/vscode/.cache/ccache_image \
-  && cp -r /home/vscode/.cache/ccache/* /home/vscode/.cache/ccache_image
+RUN echo "Storing ccache folder in the image" \
+  && mv /tmp/.ccache /home/vscode/.cache
 
 ENTRYPOINT ["/bin/bash", "-c"]

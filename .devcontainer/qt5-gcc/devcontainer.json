@@ -1,5 +1,10 @@
 {
-  "name": "qt5-gcc",
-  "build": { "dockerfile": "Dockerfile" },
+  "name": "fotowall-qt5-gcc",
+  "image": "ghcr.io/fotowall/fotowall:qt5-gcc",
 
+  "runArgs": ["--network=host"],
+
+  "remoteUser": "vscode",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/workspace/fotowall,type=bind",
+  "workspaceFolder": "/home/vscode/workspace/fotowall"
 }

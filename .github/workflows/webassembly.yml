@@ -1,19 +1,10 @@
 name: Build WebAssembly of fotowall
 on:
-  push:
-    paths-ignore:
-      # Changes to those files don't mandate running CI
-      - ".github/workflows/package.yml"
-      - ".github/workflows/build.yml"
-      - "debian/**"
-      - "README.md"
-      - "doc/**"
-      - ".pre-commit-config.yaml"
-    branches:
-      - '**'
-  pull_request:
-    branches:
-      - '**'
+  workflow_run:
+    workflows: ["Build Devcontainers"]
+    branches: '**'
+    types:
+      - completed
 
 jobs:
   build-webassembly:
@@ -38,9 +29,9 @@ jobs:
       uses: devcontainers/ci@v0.3
       with:
         # Change this to point to your image name
-        imageName: ghcr.io/fotowall/qt6-emscripten
+        imageName: ghcr.io/fotowall/fotowall:qt6-emscripten
         configFile: ./.devcontainer/qt6-emscripten/devcontainer.json
-        refFilterForPush: refs/heads/master
+        push: never
         # Change this to be your CI task/script
         runCmd: |
           # Add multiple commands to run if needed
