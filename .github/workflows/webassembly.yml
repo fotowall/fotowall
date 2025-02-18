@@ -28,8 +28,8 @@ jobs:
     - name: Build and run Dev Container task
       uses: devcontainers/ci@v0.3
       with:
-        # Change this to point to your image name
-        imageName: ghcr.io/fotowall/fotowall:qt6-emscripten
+        # FIXME Change this to fotowall/fotowall when merging
+        imageName: ghcr.io/arntanguy/fotowall:qt6-emscripten
         configFile: ./.devcontainer/qt6-emscripten/devcontainer.json
         push: never
         # Change this to be your CI task/script
