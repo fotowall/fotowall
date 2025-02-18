@@ -1,0 +1,54 @@
+name: Build Devcontainers
+
+on:
+  push:
+    paths-ignore:
+      # Changes to those files don't mandate running CI
+      - ".github/workflows/package.yml"
+      - ".github/workflows/build.yml"
+      - "debian/**"
+      - "README.md"
+      - "doc/**"
+      - ".pre-commit-config.yaml"
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  run:
+    runs-on: ubuntu-22.04
+    permissions: write-all
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [ "qt5-emscripten", "qt5-gcc", "qt6-emscripten", "qt6-gcc" ]
+    steps:
+    - name: Maximize build space
+      shell: bash
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo docker image prune --all --force
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Pre-build dev container image
+      uses: devcontainers/ci@v0.3
+      with:
+        # FIXME: Change this to fotowall/fotowall when merging
+        # Not allowed in pull requests
+        imageName: ghcr.io/arntanguy/fotowall
+        imageTag: ${{ matrix.container }}
+        subFolder: .github/.devcontainer/${{ matrix.container }}
+        configFile: .github/.devcontainer/${{ matrix.container }}/devcontainer.json
+        cacheFrom: ghcr.io/arntanguy/fotowall
+        push: always
