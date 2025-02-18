@@ -23,6 +23,7 @@
 #include <QStyle>
 #include <QTime>
 #include <QtPlugin>
+#include <QDebug>
 #include <iostream>
 #include <signal.h>
 
