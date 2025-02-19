@@ -7,5 +7,5 @@ fotowall
 *.user
 fotowall_plugin_import.cpp
 compile_commands.json
-.devcontainer/.devpod-internal
+**/.devpod-internal
 .cache/
