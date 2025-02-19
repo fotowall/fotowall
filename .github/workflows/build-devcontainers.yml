@@ -17,7 +17,7 @@ on:
       - '**'
 
 jobs:
-  build-devcontainers:
+  build_devcontainers:
     runs-on: ubuntu-22.04
     permissions: write-all
     strategy:
@@ -55,6 +55,7 @@ jobs:
 
 
   build_webassembly:
+    needs: build_devcontainers
     strategy:
       fail-fast: false
       matrix:
@@ -64,6 +65,12 @@ jobs:
     - uses: actions/checkout@v3
       with:
         submodules: recursive
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build and run Dev Container task
       uses: devcontainers/ci@v0.3
       with:
