@@ -1,22 +1,54 @@
 cmake_minimum_required(VERSION 3.1)
 project(fotowall)
 
-find_package(
-  Qt5
-  COMPONENTS
-  REQUIRED
-  Core
-  Widgets
-  Gui
-  Network
-  Svg
-  Xml
-  OpenGL
-  WebKit
-  WebKitWidgets
-  PrintSupport)
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+  message(NOTICE "Selected CCache: ${CCACHE_PROGRAM}")
+  # get_filename_component(PARENT_DIR ${PROJECT_SOURCE_DIR} DIRECTORY) use
+  # cmake_path instead
+  message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+  cmake_path(GET PROJECT_SOURCE_DIR PARENT_PATH PARENT_DIR)
+  message(STATUS "PARENT_DIR: ${PARENT_DIR}")
+  set(ccacheEnv
+      CCACHE_BASEDIR=${PARENT_DIR}
+      # locale and umask are important for docker containers no_hash_dir useful?
+      CCACHE_SLOPPINESS="umask,locale,no_hash_dir,pch_defines,file_macro,include_file_ctime"
+      CCACHE_NOHASHDIR=true)
+  set(CMAKE_C_COMPILER_LAUNCHER ${CMAKE_COMMAND} -E env ${ccacheEnv}
+                                ${CCACHE_PROGRAM})
+  set(CMAKE_CXX_COMPILER_LAUNCHER ${CMAKE_COMMAND} -E env ${ccacheEnv}
+                                  ${CCACHE_PROGRAM})
+endif()
 
-message(STATUS "Qt Version is: ${Qt5_VERSION}")
+find_package(
+  Qt6 QUIET
+  COMPONENTS Core
+             Widgets
+             Gui
+             Network
+             Svg
+             Xml
+             OpenGL
+             OpenGLWidgets
+             PrintSupport)
+if(Qt6_FOUND)
+  message(STATUS "Found Qt6")
+  message(STATUS "Qt6 Version is: ${Qt6_VERSION}")
+else()
+  find_package(
+    Qt5
+    COMPONENTS
+    REQUIRED
+    Core
+    Widgets
+    Gui
+    Network
+    Svg
+    Xml
+    OpenGL
+    PrintSupport)
+  message(STATUS "Qt5 Version is: ${Qt5_VERSION}")
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,11 +59,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/fotowall.qrc
-    ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack.h
-    ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack_p.h
-    ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBackDialog.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBackDialog.h
+    # ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack.cpp
+    # ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack.h
+    # ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBack_p.h
+    # ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBackDialog.cpp
+    # ${CMAKE_SOURCE_DIR}/3rdparty/likebackfrontend/LikeBackDialog.h
     ${CMAKE_SOURCE_DIR}/3rdparty/pencil/FloodGenerator.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/pencil/FloodGenerator.h
     ${CMAKE_SOURCE_DIR}/3rdparty/pencil/FloodPoly.cpp
@@ -71,8 +103,8 @@ set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/3rdparty/videocapture/VideoInput.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/videocapture/VideoInput.h
     ${CMAKE_SOURCE_DIR}/3rdparty/enricomath.h
-    ${CMAKE_SOURCE_DIR}/3rdparty/gsuggest.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/gsuggest.h
+    # ${CMAKE_SOURCE_DIR}/3rdparty/gsuggest.cpp
+    # ${CMAKE_SOURCE_DIR}/3rdparty/gsuggest.h
     ${CMAKE_SOURCE_DIR}/App/App.cpp
     ${CMAKE_SOURCE_DIR}/App/App.h
     ${CMAKE_SOURCE_DIR}/App/CanvasAppliance.cpp
@@ -167,8 +199,8 @@ set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/Shared/PictureServices/AbstractPictureService.h
     ${CMAKE_SOURCE_DIR}/Shared/PictureServices/FlickrPictureService.cpp
     ${CMAKE_SOURCE_DIR}/Shared/PictureServices/FlickrPictureService.h
-    ${CMAKE_SOURCE_DIR}/Shared/PictureServices/GoogleImagesPictureService.cpp
-    ${CMAKE_SOURCE_DIR}/Shared/PictureServices/GoogleImagesPictureService.h
+    # ${CMAKE_SOURCE_DIR}/Shared/PictureServices/GoogleImagesPictureService.cpp
+    # ${CMAKE_SOURCE_DIR}/Shared/PictureServices/GoogleImagesPictureService.h
     ${CMAKE_SOURCE_DIR}/Shared/PlugGui/AbstractAppliance.cpp
     ${CMAKE_SOURCE_DIR}/Shared/PlugGui/AbstractAppliance.h
     ${CMAKE_SOURCE_DIR}/Shared/PlugGui/Container.cpp
@@ -225,22 +257,92 @@ set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/Wordcloud/WordItem.h
     ${CMAKE_SOURCE_DIR}/main.cpp)
 
-add_executable(fotowall ${SOURCE_FILES})
+if(Qt6_FOUND)
+  qt_add_executable(fotowall ${SOURCE_FILES})
+else()
+  add_executable(fotowall ${SOURCE_FILES})
+endif()
 add_compile_definitions(HAS_EXPORTDIALOG)
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x051200)
-target_link_libraries(
-  fotowall
-  Qt5::Gui
-  Qt5::Widgets
-  Qt5::Xml
-  Qt5::Network
-  Qt5::Svg
-  Qt5::OpenGL
-  Qt5::Core
-  Qt5::WebKit
-  Qt5::WebKitWidgets
-  Qt5::PrintSupport
-  X11)
+if(EMSCRIPTEN)
+  # XXX needed?
+  set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
+
+  # Configure WebAssembly build settings For some reason, the build settings
+  # need to be provided through the linker. Most flags are configured to match
+  # Qt qmake See EMCC_COMMON_LFLAGS in
+  # https://github.com/qt/qtbase/blob/dev/mkspecs/wasm-emscripten/qmake.conf
+
+  # Activate Embind C/C++ bindings
+  # https://emscripten.org/docs/porting/connecting_cpp_and_javascript/embind.html
+  target_link_libraries(fotowall PUBLIC "--bind")
+
+  # Activate WebGL 2 (in addition to WebGL 1)
+  # https://emscripten.org/docs/porting/multimedia_and_graphics/OpenGL-support.html#webgl-friendly-subset-of-opengl-es-2-0-3-0
+  target_link_libraries(fotowall PUBLIC "-s USE_WEBGL2=1")
+
+  # Emulate missing OpenGL ES2/ES3 features
+  # https://emscripten.org/docs/porting/multimedia_and_graphics/OpenGL-support.html#opengl-es-2-0-3-0-emulation
+  target_link_libraries(fotowall PUBLIC "-s FULL_ES2=1")
+  # add_link_options("SHELL:-s FULL_ES3=1")
+
+  # Enable demangling of C++ stack traces
+  # https://emscripten.org/docs/porting/Debugging.html
+  target_link_libraries(fotowall PUBLIC "-s DEMANGLE_SUPPORT=1")
+
+  # Run static dtors at teardown
+  # https://emscripten.org/docs/getting_started/FAQ.html#what-does-exiting-the-runtime-mean-why-don-t-atexit-s-run
+  target_link_libraries(fotowall PUBLIC "-s EXIT_RUNTIME=0")
+
+  # Allows amount of memory used to change
+  # https://emscripten.org/docs/optimizing/Optimizing-Code.html#memory-growth
+  target_link_libraries(fotowall PUBLIC "-s ALLOW_MEMORY_GROWTH=1")
+  # target_link_libraries(fotowall PUBLIC "-s MAXIMUM_MEMORY=1GB") # required
+  # when combining USE_PTHREADS with ALLOW_MEMORY_GROWTH
+
+  # Enable C++ exception catching
+  # https://emscripten.org/docs/optimizing/Optimizing-Code.html#c-exceptions
+  target_compile_options(fotowall PUBLIC -fexceptions)
+  target_link_libraries(fotowall PUBLIC "-s DISABLE_EXCEPTION_CATCHING=0")
+
+  # Export UTF16ToString,stringToUTF16 Required by
+  # https://codereview.qt-project.org/c/qt/qtbase/+/286997 (since Qt 5.14)
+  target_link_libraries(
+    fotowall
+    PUBLIC "-s EXTRA_EXPORTED_RUNTIME_METHODS=[UTF16ToString,stringToUTF16]")
+
+  # Enable Fetch API https://emscripten.org/docs/api_reference/fetch.html
+  target_link_libraries(fotowall PUBLIC "-s FETCH=1")
+endif()
+
+if(Qt5_FOUND)
+  target_link_libraries(
+    fotowall
+    PUBLIC Qt5::Gui
+           Qt5::Widgets
+           Qt5::Xml
+           Qt5::Network
+           Qt5::Svg
+           Qt5::OpenGL
+           Qt5::Core
+           # Qt5::WebKit Qt5::WebKitWidgets
+           Qt5::PrintSupport
+           X11)
+elseif(Qt6_FOUND)
+  target_link_libraries(
+    fotowall
+    PUBLIC Qt6::Gui
+           Qt6::Widgets
+           Qt6::Xml
+           Qt6::Network
+           Qt6::Svg
+           Qt6::OpenGL
+           Qt6::OpenGLWidgets
+           Qt6::Core
+           # Qt6::WebKit Qt6::WebKitWidgets
+           Qt6::PrintSupport
+           X11)
+endif()
 target_include_directories(fotowall
                            PRIVATE ${CMAKE_SOURCE_DIR}/3rdparty/posterazor/)
 

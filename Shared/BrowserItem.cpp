@@ -198,7 +198,8 @@ void BrowserItem::wheelEvent(QGraphicsSceneWheelEvent * event)
 {
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
-  qDebug() << "BrowserItem::wheelEvent has not been ported to Qt 5.15 and will not work as expecte. Please fix the code";
+  qDebug()
+      << "BrowserItem::wheelEvent has not been ported to Qt 5.15 and will not work as expecte. Please fix the code";
 
   // FIXME I Have no idea how to do this in this Qt version.
   // As the BrowserItem is currently unused, I will leave it unfixed here

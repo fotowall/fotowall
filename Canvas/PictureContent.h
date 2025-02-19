@@ -20,6 +20,7 @@
 class CPixmap;
 class QFileSystemWatcher;
 class QNetworkReply;
+class QByteArray;
 
 /**
     \brief Transformable picture, with lots of gadgets
@@ -33,6 +34,7 @@ public:
   ~PictureContent();
 
   bool loadFromFile(const QString & picFilePath, bool setUrl, bool setRatio, bool setName);
+  bool loadFromImage(const QString & picFilePath, const QImage & img, bool setUrl, bool setRatio, bool setName);
   bool loadFromNetwork(const QString & url,
                        QNetworkReply * reply = 0,
                        const QString & title = QString(),

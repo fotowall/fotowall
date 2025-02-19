@@ -6,7 +6,7 @@ AppDir:
   path: AppDir
   app_info:
     id: fotowall
-    name: Fotowall 
+    name: Fotowall
     icon: fotowall
     version: latest
     exec: usr/bin/fotowall
@@ -31,5 +31,4 @@ AppDir:
     - libqt5printsupport5
 AppImage:
   arch: x86_64
-  update-information: !ENV ${UPDATE_INFO}
   sign-key: None

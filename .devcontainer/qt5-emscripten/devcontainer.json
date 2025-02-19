@@ -1,0 +1,4 @@
+{
+  "name": "fotowall-qt5-emscripten",
+  "image": "ghcr.io/fotowall/fotowall:qt5-emscripten"
+}

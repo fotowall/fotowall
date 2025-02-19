@@ -72,10 +72,8 @@ private:
 
 private slots:
   // contents related
-  void slotChoosePath();
   void slotChoosePdfPage();
   void slotChoosePdfPath();
-  void slotChooseSvgPath();
   void slotImageFromCanvas();
   void slotImageFromDpi();
   void slotPrintUnityChanged(int);

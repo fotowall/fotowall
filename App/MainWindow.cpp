@@ -14,7 +14,6 @@
 
 #include "App/MainWindow.h"
 
-#include "3rdparty/likebackfrontend/LikeBack.h"
 #include "App.h"
 #include "Hardware3DTest.h"
 #include "OnlineServices.h"
@@ -29,7 +28,6 @@
 
 #include <QApplication>
 #include <QCloseEvent>
-#include <QDesktopWidget>
 #include <QNetworkAccessManager>
 #include <QScreen>
 #include <QVariant>
@@ -45,7 +43,7 @@
 
 MainWindow::MainWindow(QWidget * parent)
 : PlugGui::Container(parent), ui(new Ui::MainWindow()), m_networkAccessManager(new QNetworkAccessManager),
-  m_navigationLayout(0), m_pictureSearch(0), m_likeBack(0), m_applyingAccelState(false)
+  m_navigationLayout(0), m_pictureSearch(0), m_applyingAccelState(false)
 {
   // setup widget
   applianceSetTitle(QString());
@@ -67,7 +65,6 @@ MainWindow::MainWindow(QWidget * parent)
   ui->applianceSidebar->hide();
   ui->sceneView->setFocus();
   connect(ui->sceneView, SIGNAL(heavyRepaint()), this, SLOT(slotRenderingSlow()));
-  createLikeBack();
 
   // create the navigation layout
   m_navigationLayout = new QGridLayout;
@@ -135,7 +132,6 @@ MainWindow::~MainWindow()
   delete App::workflow;
   delete App::onlineServices;
   delete m_networkAccessManager;
-  delete m_likeBack;
   delete ui;
 }
 
@@ -251,13 +247,6 @@ void MainWindow::closeEvent(QCloseEvent * event)
   event->setAccepted(App::workflow->requestExit());
 }
 
-void MainWindow::createLikeBack()
-{
-  m_likeBack = new LikeBack(LikeBack::AllButtons, false, this);
-  m_likeBack->setAcceptedLanguages(QString(FOTOWALL_FEEDBACK_LANGS).split(","));
-  m_likeBack->setServer(FOTOWALL_FEEDBACK_SCHEME, FOTOWALL_FEEDBACK_SERVER, FOTOWALL_FEEDBACK_PATH);
-}
-
 void MainWindow::slotClosePictureSearch()
 {
   App::workflow->applianceCommand(App::AC_ClosePicureSearch);
@@ -281,23 +270,6 @@ void MainWindow::slotRenderingSlow()
   }
 }
 
-void MainWindow::showLikeBack(int type)
-{
-  int usageCount = App::settings->value("Fotowall/UsageCount").toInt();
-  QString usageString = QString::number(usageCount);
-#if defined(Q_OS_LINUX)
-  usageString += " x11";
-#elif defined(Q_OS_WIN)
-  usageString += " win";
-#elif defined(Q_OS_MAC)
-  usageString += " mac";
-#else
-  usageString += " undef.";
-#endif
-  QString windowString = App::workflow->applianceName();
-  m_likeBack->execCommentDialog((LikeBack::Button)type, QString(), windowString, usageString);
-}
-
 void MainWindow::addNavigationWidget(QWidget * widget, int row, Qt::Alignment alignment)
 {
   // add the widget at the right place in the grid layout
@@ -317,21 +289,6 @@ void MainWindow::removeNavigationWidget(QWidget * widget)
   widget->hide();
   m_navigationLayout->removeWidget(widget);
   widget->setParent(0);
-}
-
-void MainWindow::on_lbLike_clicked()
-{
-  showLikeBack(LikeBack::Like);
-}
-
-void MainWindow::on_lbFeature_clicked()
-{
-  showLikeBack(LikeBack::Feature);
-}
-
-void MainWindow::on_lbBug_clicked()
-{
-  showLikeBack(LikeBack::Bug);
 }
 
 bool MainWindow::on_accelTestButton_clicked()

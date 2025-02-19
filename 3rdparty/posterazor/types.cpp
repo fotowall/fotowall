@@ -22,7 +22,11 @@
 
 #include "types.h"
 #include <QtDebug>
+#if QT_VERSION < 0x060000
 #include <QRegExp>
+#else
+#include <QRegularExpression>
+#endif
 
 const QHash<Types::UnitsOfLength, QPair<QString, double> > &Types::unitsOfLength()
 {
@@ -101,10 +105,10 @@ const QHash<QString, QSizeF> &Types::paperFormats()
     return formats;
 }
 
-QSizeF Types::paperSize(const QString &format, QPrinter::Orientation orientation, UnitsOfLength unit)
+QSizeF Types::paperSize(const QString &format, QPageLayout::Orientation orientation, UnitsOfLength unit)
 {
     QSizeF result = paperFormats().value(format);
-    if (orientation == QPrinter::Landscape)
+    if (orientation == QPageLayout::Landscape)
         result.transpose();
     return convertBetweenUnitsOfLength(result, UnitOfLengthCentimeter, unit);
 }
@@ -112,8 +116,13 @@ QSizeF Types::paperSize(const QString &format, QPrinter::Orientation orientation
 QString Types::cleanString(const QString &dirtyString)
 {
     QString result = dirtyString;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    result.replace(QRegularExpression("[:&]"), "");
+    result.replace(QRegularExpression("\\(.*\\)"), "");
+#else
     result.replace(QRegExp("[:&]"), "");
     result.replace(QRegExp("\\(.*\\)"), "");
+#endif
     result.replace('\n', ' ');
     return result.trimmed();
 }

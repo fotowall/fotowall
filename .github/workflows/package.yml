@@ -9,6 +9,7 @@ on:
     - doc/**
     - README.md
     - ".github/workflows/build.yml"
+    - ".github/workflows/webassembly.yml"
     - ".pre-commit-config.yaml"
     branches:
     - "**"
@@ -45,7 +46,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04, ubuntu-24.04]
-    runs-on: ${{ matrix.os }} 
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
@@ -92,4 +93,4 @@ jobs:
           name: "Fotowall-latest-x86_64-${{ matrix.os }}.AppImage"
           summary: "Upload latest raw AppImage"
           description: "See https://github.com/cloudsmith-io/action"
-          version: ${{ github.sha}}   
+          version: ${{ github.sha}}

@@ -144,7 +144,7 @@ bool SceneView::openGL() const
 }
 
 #ifdef QT_OPENGL_LIB
-#  include <QGLWidget>
+#  include <QOpenGLWidget>
 void SceneView::setOpenGL(bool enabled)
 {
   // skip if already ok
@@ -152,7 +152,7 @@ void SceneView::setOpenGL(bool enabled)
   m_openGL = enabled;
 
   // change viewport widget and transfer style
-  QWidget * newViewport = m_openGL ? new QGLWidget(QGLFormat(QGL::SampleBuffers)) : new QWidget();
+  QWidget * newViewport = m_openGL ? new QOpenGLWidget() : new QWidget();
   newViewport->setStyle(m_style);
   setViewport(newViewport);
   setViewportUpdateMode(m_openGL ? FullViewportUpdate : MinimalViewportUpdate);

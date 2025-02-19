@@ -17,7 +17,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QHeaderView>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 #include <QTableWidget>
 #include <QTextStream>
@@ -42,7 +42,7 @@ bool Scanner::addFromFile(const QString & txtFilePath)
   if(!file.open(QIODevice::ReadOnly)) return false;
 
   // read all the words from file
-  QRegExp splitNonWords("\\W");
+  QRegularExpression splitNonWords("\\W");
   QTextStream ts(&file);
   while(!ts.atEnd())
   {
@@ -59,7 +59,7 @@ bool Scanner::addFromFile(const QString & txtFilePath)
 
 bool Scanner::addFromString(const QString & string)
 {
-  QRegExp splitNonWords("\\W");
+  QRegularExpression splitNonWords("\\W");
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
   QStringList words = string.split(splitNonWords, Qt::SkipEmptyParts);
@@ -247,7 +247,7 @@ void Scanner::removeWordsByLanguage(QLocale::Language language)
     bool found = false;
     for(int i = 0; i < regExpCount; i++)
     {
-      if(QRegExp(regExps[i]).exactMatch(wIt->lowerString))
+      if(QRegularExpression(QRegularExpression::anchoredPattern(regExps[i])).match(wIt->lowerString).hasMatch())
       {
         found = true;
         break;

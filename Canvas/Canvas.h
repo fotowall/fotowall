@@ -20,11 +20,14 @@
 #include <QDir>
 #include <QDomElement>
 #include <QElapsedTimer>
+#include <QImage>
 #include <QPainter>
+#include <QPair>
 #include <QPixmap>
 #include <QRect>
 #include <QTime>
 #include <QUndoStack>
+#include <QVector>
 
 class AbstractContent;
 class AbstractConfig;
@@ -53,6 +56,9 @@ public:
   void addAutoContent(const QStringList & filePaths);
   void addCanvasViewContent(const QStringList & fwFilePaths);
   QList<AbstractContent *> addPictureContent(const QStringList & fileNames);
+  QList<AbstractContent *> addPictureContent(const QString & fileName, const QImage & picData);
+
+  QList<AbstractContent *> addPictureContent(const QVector<QPair<QString, QImage>> & pictures);
   PictureContent * addPictureContent(const QString & url);
   PictureContent * addNetworkPictureContent(const QString & url);
   PictureContent * addNetworkPictureContent(const QString & url,

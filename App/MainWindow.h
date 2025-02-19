@@ -57,7 +57,6 @@ private:
   QNetworkAccessManager * m_networkAccessManager;
   QGridLayout * m_navigationLayout;
   PictureSearchWidget * m_pictureSearch;
-  LikeBack * m_likeBack;
   bool m_applyingAccelState;
 
 private Q_SLOTS:
@@ -65,11 +64,6 @@ private Q_SLOTS:
   void slotClosePictureSearch();
   void slotHelpBarClicked(quint32);
   void slotRenderingSlow();
-
-  // help box
-  void on_lbBug_clicked();
-  void on_lbFeature_clicked();
-  void on_lbLike_clicked();
 
   // setup box
   bool on_accelTestButton_clicked();

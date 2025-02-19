@@ -1,0 +1,21 @@
+{
+  "name": "qt5-emscripten",
+  "build": { "dockerfile": "Dockerfile" },
+
+  "features":
+  {
+    "ghcr.io/duduribeiro/devcontainer-features/neovim:1": { "version": "nightly" },
+  },
+
+    // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+
+}

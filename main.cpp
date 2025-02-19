@@ -17,12 +17,15 @@
 #include "Shared/RenderOpts.h"
 #include "Shared/VideoProvider.h"
 #include <QApplication>
+#include <QDebug>
 #include <QLibraryInfo>
 #include <QLocale>
 #include <QSettings>
 #include <QStyle>
 #include <QTime>
 #include <QtPlugin>
+#include <iostream>
+#include <signal.h>
 
 #if defined(HAS_TRANSLATIONS)
 #  include <QTranslator>
@@ -52,8 +55,26 @@ bool RenderOpts::OxygenStyleQuirks = false;
 bool VideoProvider::Disable = false;
 QColor RenderOpts::hiColor;
 
+void signalhandler(int sig)
+{
+  if(sig == SIGINT)
+  {
+    qDebug() << "SIGINT received, exiting";
+    QApplication::instance()->quit();
+  }
+  else if(sig == SIGTERM)
+  {
+    qDebug() << "SIGTERM received, exiting";
+    QApplication::instance()->quit();
+  }
+}
+
 int main(int argc, char ** args)
 {
+  signal(SIGINT, signalhandler);
+  signal(SIGTERM, signalhandler);
+
+  std::cout << "Welcome to Fotowall" << std::endl;
 #if defined(Q_OS_LINUX) && (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   // use the Raster GraphicsSystem on X11
   QApplication::setGraphicsSystem("raster");

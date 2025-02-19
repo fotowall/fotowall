@@ -27,7 +27,11 @@
 
 #include <QDebug>
 #include <QDesktopServices>
-#include <QDesktopWidget>
+#if QT_VERSION <= QT_VERSION_CHECK(6, 0, 0)
+#  include <QDesktopWidget>
+#else
+#  include <QScreen>
+#endif
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
@@ -48,12 +52,40 @@
 #  include <QScreen>
 #endif
 
+#if defined(__EMSCRIPTEN__)
+#  include <QBuffer>
+#endif
+
 #if defined(Q_OS_WIN)
 #  include <windows.h> // for background changing stuff
 #endif
 
 #define POSTERAZOR_WEBSITE_LINK "http://posterazor.sourceforge.net/"
 #define POSTERAZOR_TUTORIAL_LINK "http://www.youtube.com/watch?v=p7XsFZ4Leo8"
+
+static QString getSavePath(const QString & initialValue,
+                           const QString & defaultExt,
+                           const QString & title,
+                           const QString & type)
+{
+  // make up the default save path (stored as 'Fotowall/ExportDir')
+  QString defaultSavePath = initialValue;
+  if(defaultSavePath.isEmpty())
+  {
+    defaultSavePath = ExportWizard::tr("Unnamed %1.%2").arg(QDate::currentDate().toString()).arg(defaultExt);
+    if(App::settings->contains("Fotowall/ExportDir"))
+      defaultSavePath.prepend(App::settings->value("Fotowall/ExportDir").toString() + QDir::separator());
+  }
+
+  // ask the file name, validate it, store back to settings
+  QString saveFilePath = QFileDialog::getSaveFileName(0, title, defaultSavePath, type);
+  if(!saveFilePath.isEmpty())
+  {
+    App::settings->setValue("Fotowall/ExportDir", QFileInfo(saveFilePath).absolutePath());
+    if(QFileInfo(saveFilePath).suffix().isEmpty()) saveFilePath += "." + defaultExt;
+  }
+  return saveFilePath;
+}
 
 ExportWizard::ExportWizard(Canvas * canvas, bool printPreferred)
 : QWizard(), m_ui(new Ui::ExportWizard), m_canvas(canvas), m_printPreferred(printPreferred), m_nextId(0),
@@ -64,7 +96,12 @@ ExportWizard::ExportWizard(Canvas * canvas, bool printPreferred)
   connect(m_ui->clWallpaper, SIGNAL(clicked()), this, SLOT(slotModeButtonClicked()));
   connect(m_ui->clImage, SIGNAL(clicked()), this, SLOT(slotModeButtonClicked()));
   connect(m_ui->clPosteRazor, SIGNAL(clicked()), this, SLOT(slotModeButtonClicked()));
+#if defined(__EMSCRIPTEN__)
+  m_ui->clPrint->setVisible(false);
+  m_ui->clPosteRazor->setVisible(false); // TODO: fix this as it ought to be working
+#else
   connect(m_ui->clPrint, SIGNAL(clicked()), this, SLOT(slotModeButtonClicked()));
+#endif
   connect(m_ui->clPdf, SIGNAL(clicked()), this, SLOT(slotModeButtonClicked()));
   connect(m_ui->clSvg, SIGNAL(clicked()), this, SLOT(slotModeButtonClicked()));
   m_ui->prWebLabel->setText("<html><body><a href='" POSTERAZOR_WEBSITE_LINK "'>" + m_ui->prWebLabel->text()
@@ -88,7 +125,6 @@ ExportWizard::ExportWizard(Canvas * canvas, bool printPreferred)
   m_printSizeInches = canvasNatInches();
 
   // connect buttons
-  connect(m_ui->chooseFilePath, SIGNAL(clicked()), this, SLOT(slotChoosePath()));
   connect(m_ui->imgFromCanvas, SIGNAL(clicked()), this, SLOT(slotImageFromCanvas()));
   connect(m_ui->imgFromDpi, SIGNAL(clicked()), this, SLOT(slotImageFromDpi()));
   connect(m_ui->printUnity, SIGNAL(currentIndexChanged(int)), this, SLOT(slotPrintUnityChanged(int)));
@@ -98,7 +134,6 @@ ExportWizard::ExportWizard(Canvas * canvas, bool printPreferred)
   connect(m_ui->pdfPageButton, SIGNAL(clicked()), this, SLOT(slotChoosePdfPage()));
   connect(m_ui->pdfPreviewButton, SIGNAL(clicked()), this, SLOT(slotPdfPreview()));
   connect(m_ui->pdfRes, SIGNAL(valueChanged(int)), this, SLOT(slotPdfResChanged(int)));
-  connect(m_ui->svgChooseFilePath, SIGNAL(clicked()), this, SLOT(slotChooseSvgPath()));
   bool imperial = QLocale::system().measurementSystem() == QLocale::ImperialSystem;
   m_ui->printUnity->setCurrentIndex(imperial ? 2 : 1);
 
@@ -205,13 +240,6 @@ void ExportWizard::setWallpaper()
 
 void ExportWizard::saveImage()
 {
-  if(m_ui->filePath->text().isEmpty())
-  {
-    QMessageBox::warning(this, tr("No file selected !"), tr("You need to choose a file path for saving."));
-    return;
-  }
-  QString imgFilePath = m_ui->filePath->text();
-
   // get the rendering size
   QSize imageSize(m_ui->saveWidth->value(), m_ui->saveHeight->value());
 
@@ -234,7 +262,17 @@ void ExportWizard::saveImage()
     image = image.transformed(matrix);
   }
 
-  // save image
+#if defined(__EMSCRIPTEN__)
+  QByteArray arr;
+  QBuffer buffer(&arr);
+  buffer.open(QIODevice::WriteOnly);
+  // TODO: allow user to choose image format when saving from the browser
+  // This would require adding a dedicated format option to the image save UI.
+  image.save(&buffer, "PNG");
+  QFileDialog::saveFileContent(arr, "fotowall.png");
+#else
+  QString imgFilePath =
+      getSavePath("", "png", tr("Choose the Image file"), tr("Images (*.jpeg *.jpg *.png *.bmp *.tif *.tiff)"));
   if(image.save(imgFilePath) && QFile::exists(imgFilePath))
   {
     int size = QFileInfo(imgFilePath).size();
@@ -242,6 +280,7 @@ void ExportWizard::saveImage()
   }
   else
     QMessageBox::warning(this, tr("Rendering Error"), tr("Error rendering to the file '%1'").arg(imgFilePath));
+#endif
 }
 
 void ExportWizard::startPosterazor()
@@ -333,6 +372,14 @@ bool ExportWizard::printPaper()
 
 bool ExportWizard::printPdf()
 {
+#if !defined(__EMSCRIPTEN__)
+  QString savePath = getSavePath(m_pdfPrinter->outputFileName(), "pdf", tr("Choose the PDF file"), tr("PDF (*.pdf)"));
+#else
+  QString savePath = "fotowall.pdf"; // Save to browser's in-memory local file storage
+#endif
+
+  if(!savePath.isEmpty()) m_pdfPrinter->setOutputFileName(savePath);
+
   // get dpi, compute printed size
   int printDpi = m_pdfPrinter->resolution();
   QSizeF canvasPrintSize = canvasNatInches() * (qreal)printDpi;
@@ -380,24 +427,35 @@ bool ExportWizard::printPdf()
   m_canvas->renderVisible(&painter, targetRect, m_canvas->sceneRect(), Qt::IgnoreAspectRatio, true);
   RenderOpts::PDFExporting = false;
   painter.end();
+
+#if defined(__EMSCRIPTEN__)
+  QFile pdfFile(savePath); // Read PDF stored in local browser storage
+  pdfFile.open(QIODevice::ReadOnly);
+  QByteArray content = pdfFile.readAll();
+  pdfFile.remove();
+
+  QFileDialog::saveFileContent(content, "fotowall.pdf"); // download pdf
+#endif
+
   return true;
 }
 
 void ExportWizard::saveSvg()
 {
-  if(m_ui->svgFilePath->text().isEmpty())
-  {
-    QMessageBox::warning(this, tr("No file selected !"), tr("You need to choose a file path for saving."));
-    return;
-  }
-  QString svgFilePath = m_ui->svgFilePath->text();
-
   // get the rendering size
   QRect svgRect(m_canvas->sceneRect().toRect());
 
   // create the SVG writer
   QSvgGenerator generator;
+#if defined(__EMSCRIPTEN__)
+  QByteArray arr;
+  QBuffer buffer(&arr);
+  buffer.open(QIODevice::WriteOnly);
+  generator.setOutputDevice(&buffer);
+#else
+  QString svgFilePath = getSavePath("", "svg", tr("Choose the Image file"), tr("Images (*.svg)"));
   generator.setFileName(svgFilePath);
+#endif
   generator.setSize(svgRect.size());
   generator.setResolution(physicalDpiX());
   generator.setViewBox(svgRect);
@@ -410,6 +468,10 @@ void ExportWizard::saveSvg()
   painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform, true);
   m_canvas->renderVisible(&painter, svgRect, svgRect, Qt::IgnoreAspectRatio, !m_ui->svgAsIsBox->isChecked());
   painter.end();
+
+#if defined(__EMSCRIPTEN__)
+  QFileDialog::saveFileContent(arr, "fotowall.svg");
+#endif
 }
 
 void ExportWizard::setPage(int pageId)
@@ -428,9 +490,6 @@ void ExportWizard::setPage(int pageId)
   // execute on-entry code
   switch(pageId)
   {
-    case PageImage:
-      if(m_ui->filePath->text().isEmpty()) slotChoosePath();
-      break;
     case PagePdf:
       if(!m_pdfPrinter)
       {
@@ -442,10 +501,6 @@ void ExportWizard::setPage(int pageId)
         initPageSizeNames();
         slotPdfUpdateGui();
       }
-      if(m_pdfPrinter->outputFileName().isEmpty()) slotChoosePdfPath();
-      break;
-    case PageSvg:
-      if(m_ui->svgFilePath->text().isEmpty()) slotChooseSvgPath();
       break;
   }
 }
@@ -509,54 +564,13 @@ void ExportWizard::initPageSizeNames()
   m_paperSizeNames[QPageSize::PageSizeId::Custom] = QPrintDialog::tr("Custom");
 }
 
-static QString getSavePath(const QString & initialValue,
-                           const QString & defaultExt,
-                           const QString & title,
-                           const QString & type)
-{
-  // make up the default save path (stored as 'Fotowall/ExportDir')
-  QString defaultSavePath = initialValue;
-  if(defaultSavePath.isEmpty())
-  {
-    defaultSavePath = ExportWizard::tr("Unnamed %1.%2").arg(QDate::currentDate().toString()).arg(defaultExt);
-    if(App::settings->contains("Fotowall/ExportDir"))
-      defaultSavePath.prepend(App::settings->value("Fotowall/ExportDir").toString() + QDir::separator());
-  }
-
-  // ask the file name, validate it, store back to settings
-  QString saveFilePath = QFileDialog::getSaveFileName(0, title, defaultSavePath, type);
-  if(!saveFilePath.isEmpty())
-  {
-    App::settings->setValue("Fotowall/ExportDir", QFileInfo(saveFilePath).absolutePath());
-    if(QFileInfo(saveFilePath).suffix().isEmpty()) saveFilePath += "." + defaultExt;
-  }
-  return saveFilePath;
-}
-
-void ExportWizard::slotChoosePath()
-{
-  QString savePath = getSavePath(m_ui->filePath->text(), "png", tr("Choose the Image file"),
-                                 tr("Images (*.jpeg *.jpg *.png *.bmp *.tif *.tiff)"));
-  if(!savePath.isEmpty()) m_ui->filePath->setText(savePath);
-}
-
 void ExportWizard::slotChoosePdfPage()
 {
   QPageSetupDialog pageSetup(m_pdfPrinter);
   if(pageSetup.exec() == QDialog::Accepted) slotPdfUpdateGui();
 }
 
-void ExportWizard::slotChoosePdfPath()
-{
-  QString savePath = getSavePath(m_pdfPrinter->outputFileName(), "pdf", tr("Choose the PDF file"), tr("PDF (*.pdf)"));
-  if(!savePath.isEmpty()) m_pdfPrinter->setOutputFileName(savePath);
-}
-
-void ExportWizard::slotChooseSvgPath()
-{
-  QString savePath = getSavePath(m_ui->svgFilePath->text(), "svg", tr("Choose the SVG file"), tr("SVG (*.svg)"));
-  if(!savePath.isEmpty()) m_ui->svgFilePath->setText(savePath);
-}
+void ExportWizard::slotChoosePdfPath() {}
 
 void ExportWizard::slotImageFromCanvas()
 {

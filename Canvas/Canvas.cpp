@@ -170,20 +170,41 @@ void Canvas::addCanvasViewContent(const QStringList & fwFilePaths)
   if(addedCanvas.isEmpty()) m_commandStack->undo();
 }
 
+QList<AbstractContent *> Canvas::addPictureContent(const QString & fileName, const QImage & picData)
+{
+  return addPictureContent({{fileName, picData}});
+}
+
 QList<AbstractContent *> Canvas::addPictureContent(const QStringList & picFilePaths)
+{
+  QVector<QPair<QString, QImage>> picData;
+  for(const auto & filePath : picFilePaths)
+  {
+    QFile file(filePath);
+    if(!file.open(QIODevice::ReadOnly))
+    {
+      qDebug() << "Could not read file " << filePath;
+      continue;
+    }
+    QImage img;
+    img.loadFromData(file.readAll());
+    picData.append({filePath, img});
+  }
+  return addPictureContent(picData);
+}
+
+QList<AbstractContent *> Canvas::addPictureContent(const QVector<QPair<QString, QImage>> & pictures)
 {
   clearSelection();
   QList<AbstractContent *> addedPictures;
-  int offset = -30 * (picFilePaths.size() - 1) / 2;
+  int offset = -30 * (pictures.size() - 1) / 2;
   QPoint pos = visibleCenter() + QPoint(offset, offset);
   m_commandStack->beginMacro(tr("Add pictures"));
-  foreach(const QString & localFile, picFilePaths)
+  for(const auto & [localFileName, pictureData] : pictures)
   {
-    if(!QFile::exists(localFile)) continue;
-
     // create picture and load the file
     PictureContent * p = createPicture(pos, true);
-    if(!p->loadFromFile(localFile, true, true, true))
+    if(!p->loadFromImage(localFileName, pictureData, true, true, true))
     {
       m_content.removeAll(p);
       delete p;

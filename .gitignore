@@ -1,5 +1,5 @@
 .build/
-build/
+build*/
 tags
 Makefile
 fotowall
@@ -7,3 +7,5 @@ fotowall
 *.user
 fotowall_plugin_import.cpp
 compile_commands.json
+**/.devpod-internal
+.cache/

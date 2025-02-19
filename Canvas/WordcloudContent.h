@@ -18,9 +18,29 @@
 #include "AbstractContent.h"
 #include "Shared/AbstractResourceProvider.h"
 #include "Wordcloud/Cloud.h"
+#include <QDialog>
 #include <QPixmap>
 class Canvas;
 class QGraphicsScene;
+class QSpinBox;
+
+/**
+ * Input options for creating a wordcloud
+ */
+class WordCloudContentInputDialog : public QDialog
+{
+  Q_OBJECT
+public:
+  WordCloudContentInputDialog(QWidget * parent = nullptr);
+  void accept() override;
+
+private:
+  QSpinBox * wordLength = nullptr;
+  QSpinBox * maxCount = nullptr;
+
+Q_SIGNALS:
+  void acceptedOptions(int wordLength, int maxCount);
+};
 
 /**
     \brief Use another Canvas as content
