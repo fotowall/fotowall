@@ -17,13 +17,13 @@
 #include "Shared/RenderOpts.h"
 #include "Shared/VideoProvider.h"
 #include <QApplication>
+#include <QDebug>
 #include <QLibraryInfo>
 #include <QLocale>
 #include <QSettings>
 #include <QStyle>
 #include <QTime>
 #include <QtPlugin>
-#include <QDebug>
 #include <iostream>
 #include <signal.h>
 
