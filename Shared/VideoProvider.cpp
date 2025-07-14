@@ -204,7 +204,7 @@ void VideoProvider::slotCaptureFromDevices()
     // set the pixmap
     emit input->newPixmap(QPixmap::fromImage(frameImage));
 #else
-      // TODO
+    // TODO
 #endif
   }
 }

@@ -160,7 +160,7 @@ void ExportWizard::setWallpaper()
   else
     image = m_canvas->renderedImage(sceneSize);
 
-    // save the right kind of image into the home dir
+  // save the right kind of image into the home dir
 #if defined(Q_OS_WIN) || defined(Q_OS_OS2)
   if(!image.save(wFilePath, "BMP"))
   {

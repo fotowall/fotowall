@@ -14,10 +14,10 @@ Build-Depends: debhelper (>= 9),
  libqt5svg5-dev,
  libqt5webkit5-dev
 
-Package: fotowall 
+Package: fotowall
 Section: main
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends}
-Description: Fotowall: Picture Collage and Creativity App 
+Description: Fotowall: Picture Collage and Creativity App
   Fotowall is a desktop APP that lets you create graphical compositions by layering and manipulating photos and pictures, text, live video, wordclouds, and drag&drop content from the internet. All to create a fun graphical composition with the maximum ease of use!
