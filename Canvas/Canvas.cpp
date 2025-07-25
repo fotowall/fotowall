@@ -1612,7 +1612,7 @@ void Canvas::slotCollateContent()
   QList<AbstractContent *> selectedContent = projectList<QGraphicsItem, AbstractContent>(selectedItems());
   if(selectedContent.isEmpty()) return;
 
-    // TODO implement collation
+  // TODO implement collation
 #if 0
     QGraphicsItemGroup * group = new QGraphicsItemGroup;
     foreach (AbstractContent * content, selectedContent)

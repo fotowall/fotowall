@@ -52,7 +52,7 @@ void UrlHistoryBox::changeUrls(const QList<QUrl> & urls, bool delayPreview)
 
   if(urls.isEmpty()) return;
 
-    // add buttons
+  // add buttons
 #if defined(MOBILE_UI)
   const int maxButtons = 3;
 #else

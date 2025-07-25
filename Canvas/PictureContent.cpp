@@ -493,11 +493,11 @@ void PictureContent::drawContent(QPainter * painter, const QRect & targetRect, Q
   // skip if no photo
   if(!m_photo) return;
 
-    // blit if opaque picture
+  // blit if opaque picture
 #if QT_VERSION >= 0x040600
-    // disabled for 4.6 too, since it relies on raster.
-    // if (m_opaquePhoto)
-    //     painter->setCompositionMode(QPainter::CompositionMode_Source);
+  // disabled for 4.6 too, since it relies on raster.
+  // if (m_opaquePhoto)
+  //     painter->setCompositionMode(QPainter::CompositionMode_Source);
 #endif
 
   // draw high-resolution photo when exporting png
