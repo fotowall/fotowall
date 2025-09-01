@@ -437,7 +437,10 @@ static bool kde4EnableBlurBehindWindow(WId window, bool enable, const QRegion & 
     XChangeProperty(dpy, window, atom, XA_CARDINAL, 32, PropModeReplace,
                     reinterpret_cast<const unsigned char *>(data.constData()), data.size());
   }
-  else { XDeleteProperty(dpy, window, atom); }
+  else
+  {
+    XDeleteProperty(dpy, window, atom);
+  }
   return true;
 }
 #  elif defined(Q_OS_WIN)

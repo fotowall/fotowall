@@ -657,7 +657,8 @@ bool Canvas::pendingChanges() const
 }
 
 #define HIGHLIGHT(x, y, del)                         \
-  do {                                               \
+  do                                                 \
+  {                                                  \
     HighlightItem * highlight = new HighlightItem(); \
     if(!del)                                         \
       m_highlightItems.append(highlight);            \

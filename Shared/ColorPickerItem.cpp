@@ -161,7 +161,10 @@ void ColorPickerItem::paint(QPainter * painter, const QStyleOptionGraphicsItem *
 #endif
     painter->setOpacity(1.0);
   }
-  else { painter->drawPixmap(m_hueSatRect.topLeft(), m_hueSatPixmap); }
+  else
+  {
+    painter->drawPixmap(m_hueSatRect.topLeft(), m_hueSatPixmap);
+  }
   painter->setPen(QPen(Qt::black, 1));
   painter->setBrush(Qt::NoBrush);
   if(m_isAnimated)
