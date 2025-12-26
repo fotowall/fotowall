@@ -15,6 +15,17 @@ Check out the [home page](https://www.enricoros.com/opensource/fotowall), the
 
 We provide several installation options: AppImage or Ubuntu packages on Linux systems, Executables on Windows or build from source on other OS. Alternatively, you could [try it out](https://arntanguy.github.io/fotowall/fotowall.html) directly in your web browser!
 
+### Nixpkgs
+
+Use the following to run using nix:
+
+```
+nix run
+```
+
+Developpers might also be interested in using the nix developpement environment `nix develop`, set-up with all the required dependencies for building fotowall.
+You may also enable the corresponding direnv with `direnv allow` to automatically activate it.
+
 ### Packages (Ubuntu)
 
 We provide two repositories to install Fotowall from on Ubuntu: the `stable` repository contains packages for the latest release, the `head` repository contains the latest developpement version (github's main branch).
