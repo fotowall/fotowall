@@ -9,4 +9,6 @@ fotowall_plugin_import.cpp
 compile_commands.json
 **/.devpod-internal
 .cache/
+# Nix
 result
+.direnv/
