@@ -682,11 +682,7 @@ void ExportWizard::slotFinished(int code)
 }
 
 void ExportWizard::slotModeButtonClicked()
-{
-  setPage(sender()->property("nextPageId").toInt());
-}
+{ setPage(sender()->property("nextPageId").toInt()); }
 
 void ExportWizard::slotOpenLink(const QString & address)
-{
-  QDesktopServices::openUrl(QUrl(address));
-}
+{ QDesktopServices::openUrl(QUrl(address)); }

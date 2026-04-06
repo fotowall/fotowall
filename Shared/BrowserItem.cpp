@@ -63,24 +63,16 @@ void BrowserItem::browse(const QString & url)
 }
 
 void BrowserItem::historyBack()
-{
-  m_webPage->triggerAction(QWebPage::Back);
-}
+{ m_webPage->triggerAction(QWebPage::Back); }
 
 void BrowserItem::historyForward()
-{
-  m_webPage->triggerAction(QWebPage::Forward);
-}
+{ m_webPage->triggerAction(QWebPage::Forward); }
 
 bool BrowserItem::readOnly() const
-{
-  return m_readOnly;
-}
+{ return m_readOnly; }
 
 void BrowserItem::setReadOnly(bool on)
-{
-  m_readOnly = on;
-}
+{ m_readOnly = on; }
 
 void BrowserItem::resizeEvent(QGraphicsSceneResizeEvent * event)
 {
@@ -95,14 +87,10 @@ void BrowserItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * opt
 }
 
 void BrowserItem::slotScrollRequested(int dx, int dy, const QRect & scrollViewRect)
-{
-  scroll(dx, dy, scrollViewRect);
-}
+{ scroll(dx, dy, scrollViewRect); }
 
 void BrowserItem::slotUpdateRequested(const QRect & rect)
-{
-  update(rect);
-}
+{ update(rect); }
 
 // utility function for passing events / calling method's base impl
 #define PASS2(__orig, __fctn)        \
@@ -122,35 +110,23 @@ void BrowserItem::slotUpdateRequested(const QRect & rect)
 
 /** Focusing **/
 void BrowserItem::focusInEvent(QFocusEvent * event)
-{
-  PASS2(event, focusInEvent);
-}
+{ PASS2(event, focusInEvent); }
 
 void BrowserItem::focusOutEvent(QFocusEvent * event)
-{
-  PASS2(event, focusOutEvent);
-}
+{ PASS2(event, focusOutEvent); }
 
 /** Keyboard **/
 void BrowserItem::keyPressEvent(QKeyEvent * event)
-{
-  PASS2(event, keyPressEvent);
-}
+{ PASS2(event, keyPressEvent); }
 
 void BrowserItem::keyReleaseEvent(QKeyEvent * event)
-{
-  PASS2(event, keyReleaseEvent);
-}
+{ PASS2(event, keyReleaseEvent); }
 
 void BrowserItem::inputMethodEvent(QInputMethodEvent * event)
-{
-  PASS2(event, inputMethodEvent);
-}
+{ PASS2(event, inputMethodEvent); }
 
 QVariant BrowserItem::inputMethodQuery(Qt::InputMethodQuery query) const
-{
-  return m_webPage->inputMethodQuery(query);
-}
+{ return m_webPage->inputMethodQuery(query); }
 
 /** Mouse **/
 void BrowserItem::hoverMoveEvent(QGraphicsSceneHoverEvent * event)

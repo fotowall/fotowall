@@ -77,9 +77,7 @@ bool AbstractAppliance::applianceCommand(int command)
 }
 
 bool AbstractAppliance::appliancePendingChanges() const
-{
-  return false;
-}
+{ return false; }
 
 bool AbstractAppliance::applianceSave(const QString & filePath)
 {
@@ -95,9 +93,7 @@ void AbstractAppliance::windowTitleSet(const QString & title)
 }
 
 void AbstractAppliance::windowTitleClear()
-{
-  windowTitleSet(QString());
-}
+{ windowTitleSet(QString()); }
 
 void AbstractAppliance::sceneSet(AbstractScene * scene)
 {
@@ -106,9 +102,7 @@ void AbstractAppliance::sceneSet(AbstractScene * scene)
 }
 
 void AbstractAppliance::sceneClear()
-{
-  sceneSet(0);
-}
+{ sceneSet(0); }
 
 void AbstractAppliance::topbarAddWidget(QWidget * widget, bool rightBar, int index)
 {
@@ -150,9 +144,7 @@ void AbstractAppliance::sidebarSetWidget(QWidget * widget)
 }
 
 void AbstractAppliance::sidebarClearWidget()
-{
-  sidebarSetWidget(0);
-}
+{ sidebarSetWidget(0); }
 
 void AbstractAppliance::centralwidgetSet(QWidget * widget)
 {
@@ -161,9 +153,7 @@ void AbstractAppliance::centralwidgetSet(QWidget * widget)
 }
 
 void AbstractAppliance::centralwidgetClear()
-{
-  centralwidgetSet(0);
-}
+{ centralwidgetSet(0); }
 
 void AbstractAppliance::containerValueSet(quint32 key, const QVariant & value)
 {

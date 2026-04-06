@@ -41,24 +41,16 @@ QRect HeartFrame::frameRect(const QRect & contentsRect) const
 }
 
 bool HeartFrame::clipContents() const
-{
-  return true;
-}
+{ return true; }
 
 QPainterPath HeartFrame::contentsClipPath(const QRect & contentsRect) const
-{
-  return heartPath(contentsRect);
-}
+{ return heartPath(contentsRect); }
 
 bool HeartFrame::isShaped() const
-{
-  return true;
-}
+{ return true; }
 
 QPainterPath HeartFrame::frameShape(const QRect & frameRect) const
-{
-  return heartPath(frameRect);
-}
+{ return heartPath(frameRect); }
 
 void HeartFrame::layoutButtons(QList<ButtonItem *> buttons, const QRect & frameRect) const
 {

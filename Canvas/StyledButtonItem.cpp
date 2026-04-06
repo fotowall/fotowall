@@ -32,9 +32,7 @@ StyledButtonItem::StyledButtonItem(const QString & text, const QFont & font, QGr
 }
 
 QString StyledButtonItem::text() const
-{
-  return m_text;
-}
+{ return m_text; }
 
 void StyledButtonItem::setText(const QString & text)
 {
@@ -48,9 +46,7 @@ void StyledButtonItem::setText(const QString & text)
 }
 
 QRectF StyledButtonItem::boundingRect() const
-{
-  return m_rect;
-}
+{ return m_rect; }
 
 void StyledButtonItem::keyPressEvent(QKeyEvent * event)
 {
@@ -59,9 +55,7 @@ void StyledButtonItem::keyPressEvent(QKeyEvent * event)
 }
 
 void StyledButtonItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * /*option*/, QWidget * /*widget*/)
-{
-  drawButton(m_pressed, m_hovered, painter);
-}
+{ drawButton(m_pressed, m_hovered, painter); }
 
 void StyledButtonItem::hoverEnterEvent(QGraphicsSceneHoverEvent * /*event*/)
 {

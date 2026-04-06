@@ -130,9 +130,7 @@ void OnlineServices::openBlog()
 }
 
 void OnlineServices::openYouTube()
-{
-  QDesktopServices::openUrl(YOUTUBE_URL);
-}
+{ QDesktopServices::openUrl(YOUTUBE_URL); }
 
 void OnlineServices::openTutorial()
 {

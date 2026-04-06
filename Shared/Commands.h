@@ -112,9 +112,7 @@ private:
 public:
   TextCommand(TextContent * content, QString newText)
   : QUndoCommand(QObject::tr("Text content changed")), m_content(content), m_newText(newText)
-  {
-    m_previousText = content->toHtml();
-  }
+  { m_previousText = content->toHtml(); }
   void redo() override
   {
     TextContent * c = dynamic_cast<TextContent *>(m_content);
@@ -289,9 +287,7 @@ private:
 
 public:
   NewContentCommand(AbstractContent * content, Canvas * canvas) : QUndoCommand(QObject::tr("New content"))
-  {
-    m_command = new DeleteContentCommand(content, canvas);
-  }
+  { m_command = new DeleteContentCommand(content, canvas); }
 
   void redo() override { m_command->undo(); }
 
@@ -440,9 +436,7 @@ private:
 public:
   DecoTitleCommand(Canvas * canvas, QString newText)
   : QUndoCommand(QObject::tr("Title changed")), m_canvas(canvas), m_newText(newText)
-  {
-    m_previousText = m_canvas->titleText();
-  }
+  { m_previousText = m_canvas->titleText(); }
   void redo() override { m_canvas->setTitleText(m_newText); }
   void undo() override { m_canvas->setTitleText(m_previousText); }
 };

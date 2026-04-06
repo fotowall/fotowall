@@ -56,19 +56,13 @@ Settings::~Settings()
 }
 
 bool Settings::firstTime() const
-{
-  return m_firstTime || usageCount() < 2;
-}
+{ return m_firstTime || usageCount() < 2; }
 
 int Settings::usageCount() const
-{
-  return value("Fotowall/UsageCount", (int)0).toInt();
-}
+{ return value("Fotowall/UsageCount", (int)0).toInt(); }
 
 QList<QUrl> Settings::recentFotowallUrls() const
-{
-  return m_recentFotowallUrls;
-}
+{ return m_recentFotowallUrls; }
 
 void Settings::addRecentFotowallUrl(const QUrl & fotowallUrl)
 {
@@ -84,16 +78,10 @@ void Settings::addRecentFotowallUrl(const QUrl & fotowallUrl)
 }
 
 void Settings::removeRecentFotowallUrl(const QUrl & fotowallUrl)
-{
-  m_recentFotowallUrls.removeAll(fotowallUrl);
-}
+{ m_recentFotowallUrls.removeAll(fotowallUrl); }
 
 void Settings::addCommandlineUrl(const QString & url)
-{
-  m_commandlineUrls.append(url);
-}
+{ m_commandlineUrls.append(url); }
 
 QStringList Settings::commandlineUrls() const
-{
-  return m_commandlineUrls;
-}
+{ return m_commandlineUrls; }

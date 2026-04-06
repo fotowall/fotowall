@@ -32,29 +32,19 @@ ButtonItem::ButtonItem(Type type, const QBrush & brush, const QIcon & icon, QGra
 }
 
 ButtonItem::Type ButtonItem::buttonType() const
-{
-  return m_type;
-}
+{ return m_type; }
 
 int ButtonItem::width() const
-{
-  return 16;
-}
+{ return 16; }
 
 int ButtonItem::height() const
-{
-  return 16;
-}
+{ return 16; }
 
 void ButtonItem::setSelectsParent(bool selects)
-{
-  m_selectsParent = selects;
-}
+{ m_selectsParent = selects; }
 
 QRectF ButtonItem::boundingRect() const
-{
-  return QRectF(-8, -8, 16, 16);
-}
+{ return QRectF(-8, -8, 16, 16); }
 
 void ButtonItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * /*widget*/)
 {

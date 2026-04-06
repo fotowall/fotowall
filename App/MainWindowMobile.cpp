@@ -142,9 +142,7 @@ MainWindowMobile::~MainWindowMobile()
 }
 
 QSize MainWindowMobile::sceneViewSize() const
-{
-  return m_sceneView->viewport()->size();
-}
+{ return m_sceneView->viewport()->size(); }
 
 void MainWindowMobile::applianceSetTitle(const QString & title)
 {
@@ -156,9 +154,7 @@ void MainWindowMobile::applianceSetTitle(const QString & title)
 }
 
 void MainWindowMobile::applianceSetScene(AbstractScene * scene)
-{
-  m_sceneView->setScene(scene);
-}
+{ m_sceneView->setScene(scene); }
 
 void MainWindowMobile::applianceSetTopbar(const QList<QWidget *> & widgets)
 {
@@ -272,14 +268,10 @@ void MainWindowMobile::applianceSetValue(quint32 key, const QVariant & value)
 }
 
 void MainWindowMobile::applianceSetFocusToScene()
-{
-  m_sceneView->setFocus(Qt::OtherFocusReason);
-}
+{ m_sceneView->setFocus(Qt::OtherFocusReason); }
 
 void MainWindowMobile::closeEvent(QCloseEvent * event)
-{
-  event->setAccepted(App::workflow->requestExit());
-}
+{ event->setAccepted(App::workflow->requestExit()); }
 
 void MainWindowMobile::resizeEvent(QResizeEvent *)
 {
@@ -298,9 +290,7 @@ void MainWindowMobile::resizeEvent(QResizeEvent *)
 }
 
 void MainWindowMobile::slotClosePictureSearch()
-{
-  App::workflow->applianceCommand(App::AC_ClosePicureSearch);
-}
+{ App::workflow->applianceCommand(App::AC_ClosePicureSearch); }
 
 void MainWindowMobile::slotHideOtherPanels()
 {
@@ -317,6 +307,4 @@ void MainWindowMobile::slotShowOtherPanels()
 }
 
 void MainWindowMobile::slotPanelLabelSizeChanged()
-{
-  resizeEvent(0);
-}
+{ resizeEvent(0); }

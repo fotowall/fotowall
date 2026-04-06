@@ -242,9 +242,7 @@ PictureSearchWidget::~PictureSearchWidget()
 }
 
 void PictureSearchWidget::setFocus()
-{
-  m_ui->lineEdit->setFocus();
-}
+{ m_ui->lineEdit->setFocus(); }
 
 void PictureSearchWidget::closeEvent(QCloseEvent * event)
 {

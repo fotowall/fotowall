@@ -385,9 +385,7 @@ void Workflow::updateBreadcrumb()
 }
 
 void Workflow::slotNodeClicked(quint32 level)
-{
-  scheduleCommand(Command(Command::ResetToLevel, level));
-}
+{ scheduleCommand(Command(Command::ResetToLevel, level)); }
 
 void Workflow::slotProcessQueue()
 {

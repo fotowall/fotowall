@@ -290,9 +290,7 @@ WordcloudContent * Canvas::addWordcloudContent()
 }
 
 void Canvas::addManualContent(AbstractContent * content, const QPoint & pos)
-{
-  initContent(content, pos);
-}
+{ initContent(content, pos); }
 
 void Canvas::clearContent()
 {
@@ -423,9 +421,7 @@ void Canvas::setForceFieldEnabled(bool enabled)
 }
 
 bool Canvas::forceFieldEnabled() const
-{
-  return m_forceFieldTimer;
-}
+{ return m_forceFieldTimer; }
 
 #if QT_VERSION >= 0x040600
 #  include <QPropertyAnimation>
@@ -500,9 +496,7 @@ void Canvas::setBackMode(BackMode mode)
 }
 
 Canvas::BackMode Canvas::backMode() const
-{
-  return m_backMode;
-}
+{ return m_backMode; }
 
 void Canvas::clearBackContent()
 {
@@ -512,9 +506,7 @@ void Canvas::clearBackContent()
 }
 
 bool Canvas::backContent() const
-{
-  return m_backContent;
-}
+{ return m_backContent; }
 
 void Canvas::setBackContentRatio(Qt::AspectRatioMode mode)
 {
@@ -527,9 +519,7 @@ void Canvas::setBackContentRatio(Qt::AspectRatioMode mode)
 }
 
 Qt::AspectRatioMode Canvas::backContentRatio() const
-{
-  return m_backContentRatio;
-}
+{ return m_backContentRatio; }
 
 void Canvas::setTopBarEnabled(bool enabled)
 {
@@ -540,9 +530,7 @@ void Canvas::setTopBarEnabled(bool enabled)
 }
 
 bool Canvas::topBarEnabled() const
-{
-  return m_topBarEnabled;
-}
+{ return m_topBarEnabled; }
 
 void Canvas::setBottomBarEnabled(bool enabled)
 {
@@ -553,9 +541,7 @@ void Canvas::setBottomBarEnabled(bool enabled)
 }
 
 bool Canvas::bottomBarEnabled() const
-{
-  return m_bottomBarEnabled;
-}
+{ return m_bottomBarEnabled; }
 
 void Canvas::setTitleText(const QString & text)
 {
@@ -565,9 +551,7 @@ void Canvas::setTitleText(const QString & text)
 }
 
 QString Canvas::titleText() const
-{
-  return m_titleText;
-}
+{ return m_titleText; }
 
 void Canvas::setCDMarkers()
 {
@@ -652,9 +636,7 @@ void Canvas::clearMarkers()
 
 /// Misc: save, restore, help...
 bool Canvas::pendingChanges() const
-{
-  return !m_content.isEmpty() && m_pendingChanges;
-}
+{ return !m_content.isEmpty() && m_pendingChanges; }
 
 #define HIGHLIGHT(x, y, del)                         \
   do                                                 \
@@ -677,15 +659,11 @@ void Canvas::blinkBackGradients()
 }
 
 void Canvas::setEmbeddedPainting(bool embedded)
-{
-  m_embeddedPainting = embedded;
-}
+{ m_embeddedPainting = embedded; }
 
 /// Modes
 CanvasModeInfo * Canvas::modeInfo() const
-{
-  return m_modeInfo;
-}
+{ return m_modeInfo; }
 
 void Canvas::renderVisible(QPainter * painter,
                            const QRectF & target,
@@ -1651,9 +1629,7 @@ void Canvas::slotDeleteContent()
 }
 
 void Canvas::slotDeleteConfig()
-{
-  deleteConfig(dynamic_cast<AbstractConfig *>(sender()));
-}
+{ deleteConfig(dynamic_cast<AbstractConfig *>(sender())); }
 
 void Canvas::slotApplyLook(quint32 frameClass, bool mirrored, bool all)
 {
@@ -1730,9 +1706,7 @@ void Canvas::slotFlipVertically()
 }
 
 void Canvas::slotTitleColorChanged()
-{
-  update(0, 0, sceneWidth(), 50);
-}
+{ update(0, 0, sceneWidth(), 50); }
 
 void Canvas::slotForeColorChanged()
 {
@@ -1741,9 +1715,7 @@ void Canvas::slotForeColorChanged()
 }
 
 void Canvas::slotGradColorChanged()
-{
-  update();
-}
+{ update(); }
 
 void Canvas::slotBackContentChanged()
 {
@@ -1752,14 +1724,10 @@ void Canvas::slotBackContentChanged()
 }
 
 void Canvas::slotMarkChanges()
-{
-  m_pendingChanges = true;
-}
+{ m_pendingChanges = true; }
 
 void Canvas::slotResetChanges()
-{
-  m_pendingChanges = false;
-}
+{ m_pendingChanges = false; }
 
 void Canvas::slotApplyForce()
 {

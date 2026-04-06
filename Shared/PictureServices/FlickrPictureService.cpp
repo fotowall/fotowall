@@ -70,9 +70,7 @@ FlickrPictureService::FlickrPictureService(const QString & apiKey, QNetworkAcces
 }
 
 FlickrPictureService::~FlickrPictureService()
-{
-  dropSearch();
-}
+{ dropSearch(); }
 
 void FlickrPictureService::searchPics(const QString & text)
 {

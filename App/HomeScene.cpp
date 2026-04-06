@@ -194,9 +194,7 @@ HomeScene::HomeScene(QObject * parent)
 }
 
 HomeScene::~HomeScene()
-{
-  qDeleteAll(m_labels);
-}
+{ qDeleteAll(m_labels); }
 
 void HomeScene::drawBackground(QPainter * painter, const QRectF & rect)
 {
@@ -284,9 +282,7 @@ void HomeScene::resize(const QSize & size)
 }
 
 bool HomeScene::sceneSelectable() const
-{
-  return false;
-}
+{ return false; }
 
 void HomeScene::slotCreatePencil()
 {

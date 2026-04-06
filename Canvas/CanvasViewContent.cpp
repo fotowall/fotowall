@@ -173,6 +173,4 @@ void CanvasViewContent::returnResource(const QVariant & resource)
 }
 
 void CanvasViewContent::slotRepaintCanvas(const QList<QRectF> &)
-{
-  update();
-}
+{ update(); }

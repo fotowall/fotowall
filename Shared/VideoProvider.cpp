@@ -23,9 +23,7 @@
 // the global video provider instance
 Q_GLOBAL_STATIC(VideoProvider, s_providerInstance)
 VideoProvider * VideoProvider::instance()
-{
-  return s_providerInstance();
-}
+{ return s_providerInstance(); }
 
 VideoProvider::VideoProvider() : QObject(), m_snapTimer(0)
 {
@@ -40,9 +38,7 @@ VideoProvider::~VideoProvider()
 }
 
 int VideoProvider::inputCount() const
-{
-  return m_inputs.size();
-}
+{ return m_inputs.size(); }
 
 bool VideoProvider::connectInput(int iIdx, QObject * receiver, const char * method)
 {

@@ -44,9 +44,7 @@ void GlowEffectWidget::setGlowRadius(int radius)
 }
 
 int GlowEffectWidget::glowRadius() const
-{
-  return m_radius;
-}
+{ return m_radius; }
 
 template<int aprec, int zprec>
 void expblur(QImage & img, int radius);
@@ -153,9 +151,7 @@ void GlowEffectWidget::paintEvent(QPaintEvent * e)
 }
 
 void GlowEffectWidget::wheelEvent(QWheelEvent * e)
-{
-  setGlowRadius((e->angleDelta().y() > 0) ? m_radius + 1 : m_radius - 1);
-}
+{ setGlowRadius((e->angleDelta().y() > 0) ? m_radius + 1 : m_radius - 1); }
 
 void GlowEffectWidget::drawRadiusBox(QPainter * p)
 {

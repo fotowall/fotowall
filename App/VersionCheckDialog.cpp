@@ -69,6 +69,4 @@ void VersionCheckDialog::slotError(const QString & error)
 }
 
 void VersionCheckDialog::slotDownload()
-{
-  QDesktopServices::openUrl(QUrl(m_release.url));
-}
+{ QDesktopServices::openUrl(QUrl(m_release.url)); }

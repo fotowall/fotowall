@@ -142,9 +142,7 @@ void UrlHistoryBox::genPreview(PixmapButton * button)
 }
 
 void UrlHistoryBox::slotClicked()
-{
-  emit urlClicked(sender()->property("url").toUrl());
-}
+{ emit urlClicked(sender()->property("url").toUrl()); }
 
 void UrlHistoryBox::slotContextMenu(const QPoint & widgetPos)
 {

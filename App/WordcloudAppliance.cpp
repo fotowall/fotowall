@@ -44,9 +44,7 @@ void WordcloudScene::resize(const QSize & size)
 }
 
 void WordcloudScene::slotWordMoved()
-{
-  adjustSceneSize();
-}
+{ adjustSceneSize(); }
 
 WordcloudAppliance::WordcloudAppliance(Wordcloud::Cloud * extCloud, QObject * parent)
 : QObject(parent), m_extCloud(extCloud), m_scene(new WordcloudScene(extCloud)), ui(new Ui::WordcloudApplianceElements),
@@ -88,9 +86,7 @@ Wordcloud::Cloud * WordcloudAppliance::takeCloud()
 }
 
 Wordcloud::Cloud * WordcloudAppliance::cloud() const
-{
-  return m_extCloud;
-}
+{ return m_extCloud; }
 
 bool WordcloudAppliance::appliancePendingChanges() const
 {
@@ -110,11 +106,7 @@ bool WordcloudAppliance::applianceSave(const QString & __filePath)
 }
 
 void WordcloudAppliance::slotRegenCloud()
-{
-  m_extCloud->regenCloud();
-}
+{ m_extCloud->regenCloud(); }
 
 void WordcloudAppliance::slotRandomizeCloud()
-{
-  m_extCloud->randomCloud();
-}
+{ m_extCloud->randomCloud(); }

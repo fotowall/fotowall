@@ -60,9 +60,7 @@ void ColorPickerItem::setColor(const QColor & color)
 }
 
 QColor ColorPickerItem::color() const
-{
-  return QColor::fromHsvF(m_hue, m_sat, m_val);
-}
+{ return QColor::fromHsvF(m_hue, m_sat, m_val); }
 
 void ColorPickerItem::setAnimated(bool animated)
 {
@@ -94,9 +92,7 @@ void ColorPickerItem::setAnimated(bool animated)
 }
 
 bool ColorPickerItem::animated() const
-{
-  return m_isAnimated;
-}
+{ return m_isAnimated; }
 
 void ColorPickerItem::setAnchor(Anchor anchor)
 {
@@ -108,14 +104,10 @@ void ColorPickerItem::setAnchor(Anchor anchor)
 }
 
 ColorPickerItem::Anchor ColorPickerItem::anchor() const
-{
-  return m_anchor;
-}
+{ return m_anchor; }
 
 QRectF ColorPickerItem::boundingRect() const
-{
-  return QRect(0, 0, m_size.width(), m_size.height());
-}
+{ return QRect(0, 0, m_size.width(), m_size.height()); }
 
 void ColorPickerItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * /*option*/, QWidget * /*widget*/)
 {

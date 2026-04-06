@@ -247,9 +247,7 @@ void PictureContent::addEffect(const PictureEffect & effect)
 }
 
 QList<PictureEffect> PictureContent::effects() const
-{
-  return m_photo->effects();
-}
+{ return m_photo->effects(); }
 
 void PictureContent::crop()
 {
@@ -284,9 +282,7 @@ QWidget * PictureContent::createPropertyWidget(ContentProperties * __p)
 }
 
 static bool hasChildTags(const QDomElement & element, const QString & tagName)
-{
-  return !element.elementsByTagName(tagName).isEmpty();
-}
+{ return !element.elementsByTagName(tagName).isEmpty(); }
 
 bool PictureContent::fromXml(const QDomElement & contentElement, const QDir & baseDir)
 {
@@ -545,9 +541,7 @@ int PictureContent::contentHeightForWidth(int width) const
 }
 
 bool PictureContent::contentOpaque() const
-{
-  return m_opaquePhoto;
-}
+{ return m_opaquePhoto; }
 
 void PictureContent::dropEvent(QGraphicsSceneDragDropEvent * event)
 {
@@ -633,9 +627,7 @@ void PictureContent::setExternalEdit(bool enabled)
 }
 
 bool PictureContent::externalEdit() const
-{
-  return m_watcher;
-}
+{ return m_watcher; }
 
 void PictureContent::dropNetworkConnection()
 {

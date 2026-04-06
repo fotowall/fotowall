@@ -137,9 +137,7 @@ void AbstractConfig::dispose()
 }
 
 AbstractContent * AbstractConfig::content() const
-{
-  return m_content;
-}
+{ return m_content; }
 
 void AbstractConfig::keepInBoundaries(const QRectF & rect)
 {
@@ -295,9 +293,7 @@ void AbstractConfig::slotRemoveFrame()
 }
 
 void AbstractConfig::slotLookApplyAll()
-{
-  emit applyLook(m_content->frameClass(), m_content->mirrored(), true);
-}
+{ emit applyLook(m_content->frameClass(), m_content->mirrored(), true); }
 
 void AbstractConfig::slotFrameSelectionChanged()
 {

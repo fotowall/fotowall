@@ -45,9 +45,7 @@ void Stacker::setContainer(Container * container)
 }
 
 Container * Stacker::container() const
-{
-  return m_container;
-}
+{ return m_container; }
 
 void Stacker::stackAppliance(AbstractAppliance * appliance)
 {
@@ -61,19 +59,13 @@ void Stacker::stackAppliance(AbstractAppliance * appliance)
 }
 
 QList<AbstractAppliance *> Stacker::stackedAppliances() const
-{
-  return m_appliances;
-}
+{ return m_appliances; }
 
 AbstractAppliance * Stacker::currentAppliance() const
-{
-  return m_appliances.isEmpty() ? 0 : m_appliances.last();
-}
+{ return m_appliances.isEmpty() ? 0 : m_appliances.last(); }
 
 int Stacker::applianceCount() const
-{
-  return m_appliances.size();
-}
+{ return m_appliances.size(); }
 
 void Stacker::popAppliance()
 {

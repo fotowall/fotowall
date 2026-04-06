@@ -44,9 +44,7 @@ bool App::isPictureFile(const QString & picFilePath)
 }
 
 bool App::isFotowallFile(const QString & fwFilePath)
-{
-  return fwFilePath.endsWith(".fotowall", Qt::CaseInsensitive);
-}
+{ return fwFilePath.endsWith(".fotowall", Qt::CaseInsensitive); }
 
 bool App::isContentUrl(const QString & url)
 {

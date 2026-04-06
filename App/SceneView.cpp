@@ -118,9 +118,7 @@ void SceneView::setScene(AbstractScene * scene)
 }
 
 AbstractScene * SceneView::scene() const
-{
-  return m_abstractScene;
-}
+{ return m_abstractScene; }
 
 AbstractScene * SceneView::takeScene()
 {
@@ -139,9 +137,7 @@ bool SceneView::supportsOpenGL() const
 }
 
 bool SceneView::openGL() const
-{
-  return m_openGL;
-}
+{ return m_openGL; }
 
 #ifdef QT_OPENGL_LIB
 #  include <QGLWidget>
@@ -176,9 +172,7 @@ void SceneView::setOpenGL(bool) {};
 #endif
 
 qreal SceneView::viewScale() const
-{
-  return m_viewScale;
-}
+{ return m_viewScale; }
 
 void SceneView::setViewScale(qreal scale)
 {

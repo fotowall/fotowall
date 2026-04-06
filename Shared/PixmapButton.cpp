@@ -34,9 +34,7 @@ void PixmapButton::setPixmap(const QPixmap & pixmap)
 }
 
 QPixmap PixmapButton::pixmap() const
-{
-  return m_fixedPixmap;
-}
+{ return m_fixedPixmap; }
 
 void PixmapButton::setHoverText(const QString & text)
 {
@@ -45,9 +43,7 @@ void PixmapButton::setHoverText(const QString & text)
 }
 
 QString PixmapButton::hoverText() const
-{
-  return m_hoverText;
-}
+{ return m_hoverText; }
 
 void PixmapButton::setHoverPixmap(const QPixmap & pixmap)
 {
@@ -56,9 +52,7 @@ void PixmapButton::setHoverPixmap(const QPixmap & pixmap)
 }
 
 QPixmap PixmapButton::hoverPixmap() const
-{
-  return m_hoverPixmap;
-}
+{ return m_hoverPixmap; }
 
 void PixmapButton::setFadeInactive(bool fade)
 {
@@ -70,9 +64,7 @@ void PixmapButton::setFadeInactive(bool fade)
 }
 
 bool PixmapButton::fadeInactive() const
-{
-  return m_fadeInactive;
-}
+{ return m_fadeInactive; }
 
 void PixmapButton::setFixedSize(const QSize & size)
 {
@@ -81,14 +73,10 @@ void PixmapButton::setFixedSize(const QSize & size)
 }
 
 void PixmapButton::setFixedSize(int w, int h)
-{
-  setFixedSize(QSize(w, h));
-}
+{ setFixedSize(QSize(w, h)); }
 
 QSize PixmapButton::fixedSize() const
-{
-  return m_fixedSize;
-}
+{ return m_fixedSize; }
 
 void PixmapButton::enterEvent(QEvent *)
 {

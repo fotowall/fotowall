@@ -18,9 +18,7 @@
 AbstractScene::AbstractScene(QObject * parent) : QGraphicsScene(parent), m_rotationAngle(0) {}
 
 void AbstractScene::adjustSceneSize()
-{
-  emit sceneSizeChanged();
-}
+{ emit sceneSizeChanged(); }
 
 void AbstractScene::resizeAutoFit()
 {
@@ -52,9 +50,7 @@ void AbstractScene::resizeEvent()
 }
 
 bool AbstractScene::sceneSelectable() const
-{
-  return true;
-}
+{ return true; }
 
 void AbstractScene::setPerspective(const QPointF & angles)
 {
@@ -74,9 +70,7 @@ void AbstractScene::setPerspective_(const QPointF & angles)
 }
 
 QPointF AbstractScene::perspective() const
-{
-  return m_perspectiveAngles;
-}
+{ return m_perspectiveAngles; }
 
 void AbstractScene::setRotation(qreal rotation)
 {
@@ -96,6 +90,4 @@ void AbstractScene::setRotation_(qreal rotation)
 }
 
 qreal AbstractScene::rotation() const
-{
-  return m_rotationAngle;
-}
+{ return m_rotationAngle; }

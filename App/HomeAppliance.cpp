@@ -133,23 +133,15 @@ void HomeAppliance::slotRemoveFromHistory(const QUrl & url)
 }
 
 void HomeAppliance::slotOpenFile()
-{
-  App::workflow->loadCanvas_A();
-}
+{ App::workflow->loadCanvas_A(); }
 
 void HomeAppliance::slotStartCanvas()
-{
-  App::workflow->startCanvas_A();
-}
+{ App::workflow->startCanvas_A(); }
 
 #if defined(HAS_WORDCLOUD_APPLIANCE)
 void HomeAppliance::slotStartWordcloud()
-{
-  App::workflow->startWordcloud_A();
-}
+{ App::workflow->startWordcloud_A(); }
 #endif
 
 void HomeAppliance::slotStartWizard()
-{
-  HERE
-}
+{ HERE }

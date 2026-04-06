@@ -51,9 +51,7 @@ GroupBoxWidget::GroupBoxWidget(QWidget * parent)
 }
 
 QString GroupBoxWidget::title() const
-{
-  return m_titleText;
-}
+{ return m_titleText; }
 
 void GroupBoxWidget::setTitle(const QString & title)
 {
@@ -62,9 +60,7 @@ void GroupBoxWidget::setTitle(const QString & title)
 }
 
 int GroupBoxWidget::titleSize() const
-{
-  return m_titleFont.pixelSize();
-}
+{ return m_titleFont.pixelSize(); }
 
 void GroupBoxWidget::setTitleSize(int titleSize)
 {
@@ -93,14 +89,10 @@ void GroupBoxWidget::setTitleSize(int titleSize)
 #  endif
 
 int GroupBoxWidget::calcMinWidth() const
-{
-  return qMax(QFontMetrics(m_titleFont).horizontalAdvance(m_titleText) + 12, QWidget::sizeHint().width());
-}
+{ return qMax(QFontMetrics(m_titleFont).horizontalAdvance(m_titleText) + 12, QWidget::sizeHint().width()); }
 
 bool GroupBoxWidget::isCheckable() const
-{
-  return m_checkable;
-}
+{ return m_checkable; }
 
 void GroupBoxWidget::setCheckable(bool checkable)
 {
@@ -110,9 +102,7 @@ void GroupBoxWidget::setCheckable(bool checkable)
 }
 
 bool GroupBoxWidget::isChecked() const
-{
-  return m_checkable ? m_checked : false;
-}
+{ return m_checkable ? m_checked : false; }
 
 void GroupBoxWidget::setChecked(bool checked)
 {
@@ -123,9 +113,7 @@ void GroupBoxWidget::setChecked(bool checked)
 }
 
 int GroupBoxWidget::borderFlags() const
-{
-  return m_borderFlags;
-}
+{ return m_borderFlags; }
 
 void GroupBoxWidget::setBorderFlags(int flags)
 {
@@ -152,9 +140,7 @@ void GroupBoxWidget::expand()
 }
 
 void GroupBoxWidget::mousePressEvent(QMouseEvent * /*event*/)
-{
-  setChecked(!isChecked());
-}
+{ setChecked(!isChecked()); }
 
 void GroupBoxWidget::paintEvent(QPaintEvent * /*event*/)
 {
@@ -221,19 +207,13 @@ void GroupBoxWidget::paintEvent(QPaintEvent * /*event*/)
 }
 
 void GroupBoxWidget::enterEvent(QEvent *)
-{
-  ANIMATE_PARAM("hAnim", 400, 1.0, false);
-}
+{ ANIMATE_PARAM("hAnim", 400, 1.0, false); }
 
 void GroupBoxWidget::leaveEvent(QEvent *)
-{
-  ANIMATE_PARAM("hAnim", 400, 0.0, false);
-}
+{ ANIMATE_PARAM("hAnim", 400, 0.0, false); }
 
 qreal GroupBoxWidget::checkValue() const
-{
-  return m_checkValue;
-}
+{ return m_checkValue; }
 
 void GroupBoxWidget::setCheckValue(qreal value)
 {
@@ -242,9 +222,7 @@ void GroupBoxWidget::setCheckValue(qreal value)
 }
 
 qreal GroupBoxWidget::hoverValue() const
-{
-  return m_hoverValue;
-}
+{ return m_hoverValue; }
 
 void GroupBoxWidget::setHoverValue(qreal value)
 {
@@ -338,9 +316,7 @@ void GroupBoxWidget::slotFinalizeDesign()
 #  define SP_SPACING 2
 
 int GroupBoxWidget::calcMinWidth() const
-{
-  return qMax(m_labelRect.width(), QWidget::sizeHint().width());
-}
+{ return qMax(m_labelRect.width(), QWidget::sizeHint().width()); }
 
 void GroupBoxWidget::setSmartPanel(bool smart)
 {
@@ -352,9 +328,7 @@ void GroupBoxWidget::setSmartPanel(bool smart)
 }
 
 QPoint GroupBoxWidget::basePos() const
-{
-  return m_basePos;
-}
+{ return m_basePos; }
 
 void GroupBoxWidget::setBasePos(const QPoint & pos)
 {
@@ -366,9 +340,7 @@ void GroupBoxWidget::setBasePos(const QPoint & pos)
 }
 
 int GroupBoxWidget::labelWidth() const
-{
-  return m_labelRect.width();
-}
+{ return m_labelRect.width(); }
 
 void GroupBoxWidget::disappear()
 {
@@ -404,9 +376,7 @@ void GroupBoxWidget::smartRaise()
 }
 
 qreal GroupBoxWidget::panelState() const
-{
-  return m_panelState;
-}
+{ return m_panelState; }
 
 void GroupBoxWidget::setPanelState(qreal state)
 {

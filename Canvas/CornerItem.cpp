@@ -27,9 +27,7 @@
 CornerItem::CornerItem(Qt::Corner corner, bool rotateOnly, AbstractContent * content)
 : QGraphicsItem(content), m_content(content), m_corner(corner), m_opMask(rotateOnly ? Rotate | FixRotate : AllowAll),
   m_side(8), m_operation(Off), m_startRotation(content->rotation()), m_hidden(false)
-{
-  setAcceptHoverEvents(true);
-}
+{ setAcceptHoverEvents(true); }
 
 void CornerItem::relayout(const QRect & rect)
 {
@@ -60,9 +58,7 @@ void CornerItem::relayout(const QRect & rect)
 }
 
 QRectF CornerItem::boundingRect() const
-{
-  return QRectF(-m_side, -m_side, 2 * m_side, 2 * m_side);
-}
+{ return QRectF(-m_side, -m_side, 2 * m_side, 2 * m_side); }
 
 void CornerItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
 {
