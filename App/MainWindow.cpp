@@ -140,9 +140,7 @@ MainWindow::~MainWindow()
 }
 
 QSize MainWindow::sceneViewSize() const
-{
-  return ui->sceneView->viewport()->size();
-}
+{ return ui->sceneView->viewport()->size(); }
 
 void MainWindow::applianceSetTitle(const QString & title)
 {
@@ -154,9 +152,7 @@ void MainWindow::applianceSetTitle(const QString & title)
 }
 
 void MainWindow::applianceSetScene(AbstractScene * scene)
-{
-  ui->sceneView->setScene(scene);
-}
+{ ui->sceneView->setScene(scene); }
 
 static void removeLayoutChildWidges(QLayout * layout)
 {
@@ -242,14 +238,10 @@ void MainWindow::applianceSetValue(quint32 key, const QVariant & value)
 }
 
 void MainWindow::applianceSetFocusToScene()
-{
-  ui->sceneView->setFocus(Qt::OtherFocusReason);
-}
+{ ui->sceneView->setFocus(Qt::OtherFocusReason); }
 
 void MainWindow::closeEvent(QCloseEvent * event)
-{
-  event->setAccepted(App::workflow->requestExit());
-}
+{ event->setAccepted(App::workflow->requestExit()); }
 
 void MainWindow::createLikeBack()
 {
@@ -259,9 +251,7 @@ void MainWindow::createLikeBack()
 }
 
 void MainWindow::slotClosePictureSearch()
-{
-  App::workflow->applianceCommand(App::AC_ClosePicureSearch);
-}
+{ App::workflow->applianceCommand(App::AC_ClosePicureSearch); }
 
 void MainWindow::slotHelpBarClicked(quint32 id)
 {
@@ -320,19 +310,13 @@ void MainWindow::removeNavigationWidget(QWidget * widget)
 }
 
 void MainWindow::on_lbLike_clicked()
-{
-  showLikeBack(LikeBack::Like);
-}
+{ showLikeBack(LikeBack::Like); }
 
 void MainWindow::on_lbFeature_clicked()
-{
-  showLikeBack(LikeBack::Feature);
-}
+{ showLikeBack(LikeBack::Feature); }
 
 void MainWindow::on_lbBug_clicked()
-{
-  showLikeBack(LikeBack::Bug);
-}
+{ showLikeBack(LikeBack::Bug); }
 
 bool MainWindow::on_accelTestButton_clicked()
 {

@@ -31,9 +31,7 @@
 using namespace MetaXml;
 
 Reader_1::Reader_1(const QByteArray & data) : QXmlStreamReader(data)
-{
-  read();
-}
+{ read(); }
 
 void Reader_1::read()
 {
@@ -128,9 +126,7 @@ void Reader_1::readWebsites()
 
 Q_GLOBAL_STATIC(Connector, connectorInstance);
 Connector * Connector::instance()
-{
-  return connectorInstance();
-}
+{ return connectorInstance(); }
 
 Connector::Connector() : m_nam(new QNetworkAccessManager), m_reader(0)
 {
@@ -141,19 +137,13 @@ Connector::Connector() : m_nam(new QNetworkAccessManager), m_reader(0)
 }
 
 bool Connector::hasDone() const
-{
-  return !m_nam;
-}
+{ return !m_nam; }
 
 bool Connector::isValid() const
-{
-  return m_reader;
-}
+{ return m_reader; }
 
 const Reader_1 * Connector::reader() const
-{
-  return m_reader;
-}
+{ return m_reader; }
 
 void Connector::slotGotReply()
 {

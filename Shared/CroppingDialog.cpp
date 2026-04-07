@@ -24,6 +24,4 @@ CroppingDialog::CroppingDialog(QPixmap * pix) : QDialog()
 }
 
 QRect CroppingDialog::getCroppingRect() const
-{
-  return ui.croppingWidget->getCroppingRect();
-}
+{ return ui.croppingWidget->getCroppingRect(); }

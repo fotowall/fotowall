@@ -68,9 +68,7 @@ PictureConfig::PictureConfig(PictureContent * pictureContent, AbstractConfig_PAR
 }
 
 PictureConfig::~PictureConfig()
-{
-  delete m_pictureUi;
-}
+{ delete m_pictureUi; }
 
 void PictureConfig::on_applyEffects_clicked()
 {

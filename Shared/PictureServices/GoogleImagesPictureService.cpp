@@ -91,9 +91,7 @@ GoogleImagesPictureService::GoogleImagesPictureService(QNetworkAccessManager * m
 }
 
 GoogleImagesPictureService::~GoogleImagesPictureService()
-{
-  dropSearch();
-}
+{ dropSearch(); }
 
 void GoogleImagesPictureService::configure(int contentType, int sizeType)
 {

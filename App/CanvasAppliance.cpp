@@ -156,9 +156,7 @@ bool CanvasAppliance::applianceCommand(int command)
 }
 
 bool CanvasAppliance::appliancePendingChanges() const
-{
-  return m_extCanvas ? m_extCanvas->pendingChanges() : false;
-}
+{ return m_extCanvas ? m_extCanvas->pendingChanges() : false; }
 
 bool CanvasAppliance::applianceSave(const QString & __filePath)
 {
@@ -440,9 +438,7 @@ int CanvasAppliance::projectComboIndexFromMode(const CanvasModeInfo::Mode mode) 
 }
 
 void CanvasAppliance::configurePrint(bool enabled)
-{
-  ui.exportButton->setText(enabled ? tr("Print") : tr("Export"));
-}
+{ ui.exportButton->setText(enabled ? tr("Print") : tr("Export")); }
 
 void CanvasAppliance::slotAddCanvas()
 {
@@ -488,9 +484,7 @@ void CanvasAppliance::slotAddWordcloud()
 }
 
 void CanvasAppliance::slotSearchPicturesToggled(bool visible)
-{
-  containerValueSet(App::CC_ShowPictureSearch, visible);
-}
+{ containerValueSet(App::CC_ShowPictureSearch, visible); }
 
 void CanvasAppliance::slotBackContentRemove(bool checked)
 {
@@ -563,24 +557,16 @@ void CanvasAppliance::slotSetBackRatio(QAction * action)
 }
 
 void CanvasAppliance::slotArrangeForceField(bool checked)
-{
-  m_extCanvas->setForceFieldEnabled(checked);
-}
+{ m_extCanvas->setForceFieldEnabled(checked); }
 
 void CanvasAppliance::slotArrangeColorCollage()
-{
-  HERE
-}
+{ HERE }
 
 void CanvasAppliance::slotArrangeRandom()
-{
-  m_extCanvas->randomizeContents(true, true, true);
-}
+{ m_extCanvas->randomizeContents(true, true, true); }
 
 void CanvasAppliance::slotArrangeShaped()
-{
-  HERE
-}
+{ HERE }
 
 void CanvasAppliance::slotDecoTopBar(bool checked)
 {
@@ -623,14 +609,10 @@ void CanvasAppliance::slotDecoClearTitle()
 }
 
 bool CanvasAppliance::slotFileLoad()
-{
-  return App::workflow->loadCanvas_A();
-}
+{ return App::workflow->loadCanvas_A(); }
 
 bool CanvasAppliance::slotFileSave()
-{
-  return applianceSave();
-}
+{ return applianceSave(); }
 
 bool CanvasAppliance::slotFileExport()
 {
@@ -737,9 +719,7 @@ void CanvasAppliance::slotShowPropertiesWidget(QWidget * widget)
 }
 
 void CanvasAppliance::slotFilePathChanged()
-{
-  windowTitleSet(m_extCanvas->prettyBaseName());
-}
+{ windowTitleSet(m_extCanvas->prettyBaseName()); }
 
 void CanvasAppliance::slotVerifyVideoInputs(int count)
 {

@@ -70,9 +70,7 @@ void Cloud::newCloud(const WordList & words)
 }
 
 void Cloud::regenCloud()
-{
-  process();
-}
+{ process(); }
 
 void Cloud::randomCloud()
 {
@@ -102,9 +100,7 @@ void Cloud::setScene(QGraphicsScene * scene)
 }
 
 QGraphicsScene * Cloud::scene() const
-{
-  return m_scene;
-}
+{ return m_scene; }
 
 void Cloud::removeFromScene()
 {
@@ -122,9 +118,7 @@ void Cloud::setPlacement(Wordcloud::Placement placement)
 }
 
 Wordcloud::Placement Cloud::placement() const
-{
-  return m_placement;
-}
+{ return m_placement; }
 
 void Cloud::setAccurate(bool accurate)
 {
@@ -136,9 +130,7 @@ void Cloud::setAccurate(bool accurate)
 }
 
 bool Cloud::accurate() const
-{
-  return m_accurate;
-}
+{ return m_accurate; }
 
 void Cloud::setAppearance(const Wordcloud::Appearance & appearance)
 {
@@ -147,19 +139,13 @@ void Cloud::setAppearance(const Wordcloud::Appearance & appearance)
 }
 
 Wordcloud::Appearance Cloud::appearance() const
-{
-  return m_appearance;
-}
+{ return m_appearance; }
 
 void Cloud::setBusyMode(Wordcloud::BusyMode mode)
-{
-  m_busyMode = mode;
-}
+{ m_busyMode = mode; }
 
 Wordcloud::BusyMode Cloud::busyMode() const
-{
-  return m_busyMode;
-}
+{ return m_busyMode; }
 
 bool Cloud::loadFromXml(QDomElement & cloudElement)
 {

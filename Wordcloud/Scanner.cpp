@@ -27,14 +27,10 @@ using namespace Wordcloud;
 Scanner::Scanner() : m_minimumLength(0), m_maximumLength(-1) {}
 
 void Scanner::setMinimumWordLength(int minimum)
-{
-  m_minimumLength = minimum;
-}
+{ m_minimumLength = minimum; }
 
 void Scanner::setMaximumWordLength(int maximum)
-{
-  m_maximumLength = maximum;
-}
+{ m_maximumLength = maximum; }
 
 bool Scanner::addFromFile(const QString & txtFilePath)
 {
@@ -84,14 +80,10 @@ bool Scanner::addFromRss(const QUrl & rss)
 }
 
 void Scanner::clear()
-{
-  m_words.clear();
-}
+{ m_words.clear(); }
 
 static bool wordFrequencySorter(const Word & w1, const Word & w2)
-{
-  return w1.count > w2.count;
-}
+{ return w1.count > w2.count; }
 
 WordList Scanner::takeWords(bool cleanList, int maxCount)
 {
@@ -121,14 +113,10 @@ WordList Scanner::takeWords(bool cleanList, int maxCount)
 }
 
 int Scanner::wordCount() const
-{
-  return m_words.count();
-}
+{ return m_words.count(); }
 
 bool Scanner::isEmpty() const
-{
-  return m_words.isEmpty();
-}
+{ return m_words.isEmpty(); }
 
 void Scanner::dumpOnTable(QTableWidget * table)
 {

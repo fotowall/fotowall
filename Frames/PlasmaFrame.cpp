@@ -107,24 +107,16 @@ PlasmaFrame::PlasmaFrame(quint32 frameClass, const QString & frameFilePath) : d(
 }
 
 PlasmaFrame::~PlasmaFrame()
-{
-  delete d;
-}
+{ delete d; }
 
 bool PlasmaFrame::isValid() const
-{
-  return d->svg;
-}
+{ return d->svg; }
 
 quint32 PlasmaFrame::frameClass() const
-{
-  return d->frameClass;
-}
+{ return d->frameClass; }
 
 QRect PlasmaFrame::frameRect(const QRect & contentsRect) const
-{
-  return contentsRect.adjusted(-d->padL, -d->padT, d->padR, d->padB);
-}
+{ return contentsRect.adjusted(-d->padL, -d->padT, d->padR, d->padB); }
 
 void PlasmaFrame::layoutButtons(QList<ButtonItem *> buttons, const QRect & frameRect) const
 {

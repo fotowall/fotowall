@@ -69,9 +69,7 @@ BezierCubicItem::BezierCubicItem(QGraphicsItem * parent) : QGraphicsItem(parent)
 }
 
 QPainterPath BezierCubicItem::shape() const
-{
-  return m_path->path();
-}
+{ return m_path->path(); }
 
 void BezierCubicItem::setControlPoints(const QList<QPointF> & points)
 {
@@ -89,9 +87,7 @@ QList<QPointF> BezierCubicItem::controlPoints() const
 }
 
 QRectF BezierCubicItem::boundingRect() const
-{
-  return QRectF(-5, -5, 11, 11);
-}
+{ return QRectF(-5, -5, 11, 11); }
 
 void BezierCubicItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * /*option*/, QWidget * /*widget*/)
 {
@@ -140,9 +136,7 @@ BezierControlPoint::BezierControlPoint(BezierCubicItem * parent, int index)
 }
 
 QRectF BezierControlPoint::boundingRect() const
-{
-  return QRectF(-7, -7, 15, 15);
-}
+{ return QRectF(-7, -7, 15, 15); }
 
 void BezierControlPoint::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 {
@@ -154,9 +148,7 @@ void BezierControlPoint::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 }
 
 void BezierControlPoint::mouseReleaseEvent(QGraphicsSceneMouseEvent * /* event */)
-{
-  m_parent->controlPointMoved(m_index, true);
-}
+{ m_parent->controlPointMoved(m_index, true); }
 
 void BezierControlPoint::paint(QPainter * painter, const QStyleOptionGraphicsItem * /*option*/, QWidget * /*widget*/)
 {

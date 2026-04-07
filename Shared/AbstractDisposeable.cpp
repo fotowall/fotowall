@@ -64,9 +64,7 @@ void AbstractDisposeable::dispose()
 }
 
 qreal AbstractDisposeable::contentOpacity() const
-{
-  return m_contentOpacity;
-}
+{ return m_contentOpacity; }
 
 void AbstractDisposeable::setContentOpacity(qreal opacity)
 {

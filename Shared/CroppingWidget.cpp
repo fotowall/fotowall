@@ -59,9 +59,7 @@ void MaskItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * /*opti
 }
 
 qreal MaskItem::strength() const
-{
-  return m_strength;
-}
+{ return m_strength; }
 
 void MaskItem::setStrength(qreal strength)
 {

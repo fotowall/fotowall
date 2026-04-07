@@ -29,14 +29,10 @@ PaneWidget::PaneWidget(QWidget * parent)
 }
 
 QPointF PaneWidget::value() const
-{
-  return m_value;
-}
+{ return m_value; }
 
 QPointF PaneWidget::endValue() const
-{
-  return m_endValue;
-}
+{ return m_endValue; }
 
 void PaneWidget::setValue(const QPointF & value)
 {
@@ -49,9 +45,7 @@ void PaneWidget::setValue(const QPointF & value)
 }
 
 QRectF PaneWidget::range() const
-{
-  return m_range;
-}
+{ return m_range; }
 
 void PaneWidget::setRange(const QRectF & range)
 {

@@ -73,9 +73,7 @@ TextContent::~TextContent()
 }
 
 QString TextContent::toHtml() const
-{
-  return m_text->toHtml();
-}
+{ return m_text->toHtml(); }
 
 void TextContent::setHtml(const QString & htmlCode)
 {
@@ -90,9 +88,7 @@ void TextContent::setPlainText(const QString & plainText)
 }
 
 bool TextContent::hasShape() const
-{
-  return !m_shapePath.isEmpty();
-}
+{ return !m_shapePath.isEmpty(); }
 
 void TextContent::clearShape()
 {
@@ -102,9 +98,7 @@ void TextContent::clearShape()
 }
 
 bool TextContent::isShapeEditing() const
-{
-  return m_shapeEditor->isVisible();
-}
+{ return m_shapeEditor->isVisible(); }
 
 void TextContent::setShapeEditing(bool enabled)
 {
@@ -390,9 +384,7 @@ void TextContent::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
 }
 
 QPainterPath TextContent::shapePath() const
-{
-  return m_shapePath;
-}
+{ return m_shapePath; }
 
 void TextContent::setShapePath(const QPainterPath & path)
 {

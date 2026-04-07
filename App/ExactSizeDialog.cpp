@@ -15,6 +15,4 @@
 #include "ExactSizeDialog.h"
 
 ExactSizeDialog::ExactSizeDialog(QWidget * parent) : QDialog(parent)
-{
-  ui.setupUi(this);
-}
+{ ui.setupUi(this); }

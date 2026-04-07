@@ -32,34 +32,22 @@ void CanvasModeInfo::setFixedSizeInches(const QSizeF & size)
 }
 
 bool CanvasModeInfo::fixedSize() const
-{
-  return !m_realSizeInches.isEmpty();
-}
+{ return !m_realSizeInches.isEmpty(); }
 
 QSizeF CanvasModeInfo::fixedSizeInches() const
-{
-  return m_realSizeInches;
-}
+{ return m_realSizeInches; }
 
 QSize CanvasModeInfo::fixedScreenPixels() const
-{
-  return QSize(m_realSizeInches.width() * m_canvasDpi.x(), m_realSizeInches.height() * m_canvasDpi.y());
-}
+{ return QSize(m_realSizeInches.width() * m_canvasDpi.x(), m_realSizeInches.height() * m_canvasDpi.y()); }
 
 QSize CanvasModeInfo::fixedPrinterPixels() const
-{
-  return QSize(m_realSizeInches.width() * m_printDpi, m_realSizeInches.height() * m_printDpi);
-}
+{ return QSize(m_realSizeInches.width() * m_printDpi, m_realSizeInches.height() * m_printDpi); }
 
 void CanvasModeInfo::setScreenDpi(float dpiX, float dpiY)
-{
-  m_canvasDpi = QPointF(dpiX, dpiY);
-}
+{ m_canvasDpi = QPointF(dpiX, dpiY); }
 
 QPointF CanvasModeInfo::screenDpi() const
-{
-  return m_canvasDpi;
-}
+{ return m_canvasDpi; }
 
 void CanvasModeInfo::setPrintDpi(float dpi)
 {
@@ -67,19 +55,13 @@ void CanvasModeInfo::setPrintDpi(float dpi)
 }
 
 float CanvasModeInfo::printDpi() const
-{
-  return m_printDpi;
-}
+{ return m_printDpi; }
 
 void CanvasModeInfo::setPrintLandscape(bool landscape)
-{
-  m_landscape = landscape;
-}
+{ m_landscape = landscape; }
 
 bool CanvasModeInfo::printLandscape() const
-{
-  return m_landscape;
-}
+{ return m_landscape; }
 
 void CanvasModeInfo::setProjectMode(Mode mode)
 {
@@ -88,14 +70,10 @@ void CanvasModeInfo::setProjectMode(Mode mode)
 }
 
 CanvasModeInfo::Mode CanvasModeInfo::projectMode() const
-{
-  return m_projectMode;
-}
+{ return m_projectMode; }
 
 CanvasModeInfo::Mode CanvasModeInfo::previousProjectMode() const
-{
-  return m_previousProjectMode;
-}
+{ return m_previousProjectMode; }
 
 void CanvasModeInfo::toXml(QDomElement & canvasModeElement) const
 {

@@ -144,6 +144,4 @@ void WordcloudContent::returnResource(const QVariant & resource)
 }
 
 void WordcloudContent::slotRepaintScene(const QList<QRectF> & /*exposed*/)
-{
-  update();
-}
+{ update(); }

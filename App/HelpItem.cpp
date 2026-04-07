@@ -81,9 +81,7 @@ HelpItem::HelpItem(QGraphicsItem * parent)
 }
 
 HelpItem::~HelpItem()
-{
-  delete m_frame;
-}
+{ delete m_frame; }
 
 QRectF HelpItem::boundingRect() const
 {
@@ -98,6 +96,4 @@ void HelpItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * /*opti
 }
 
 void HelpItem::mousePressEvent(QGraphicsSceneMouseEvent * /*event*/)
-{
-  emit closeMe();
-}
+{ emit closeMe(); }

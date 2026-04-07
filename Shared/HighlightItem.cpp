@@ -23,9 +23,7 @@
 
 HighlightItem::HighlightItem(QGraphicsItem * parent)
 : QGraphicsItem(parent), m_unset(true), m_xn(0), m_yn(0), m_phase(0), m_radius(1), m_closing(false)
-{
-  m_timer.start(30, this);
-}
+{ m_timer.start(30, this); }
 
 void HighlightItem::setPos(double x, double y)
 {
@@ -49,14 +47,10 @@ void HighlightItem::reposition(const QRectF & rect)
 }
 
 void HighlightItem::deleteAfterAnimation()
-{
-  m_closing = true;
-}
+{ m_closing = true; }
 
 QRectF HighlightItem::boundingRect() const
-{
-  return QRectF(-m_radius, -m_radius, 2 * m_radius, 2 * m_radius);
-}
+{ return QRectF(-m_radius, -m_radius, 2 * m_radius, 2 * m_radius); }
 
 void HighlightItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * /*option*/, QWidget * /*widget*/)
 {

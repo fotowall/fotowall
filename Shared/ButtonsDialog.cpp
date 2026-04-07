@@ -111,9 +111,7 @@ void ButtonsDialog::setButtons(QDialogButtonBox::StandardButtons buttons)
 }
 
 QDialogButtonBox::StandardButtons ButtonsDialog::buttons() const
-{
-  return m_buttonBox->standardButtons();
-}
+{ return m_buttonBox->standardButtons(); }
 
 void ButtonsDialog::setButtonText(QDialogButtonBox::StandardButton sb, const QString & text)
 {
@@ -136,39 +134,25 @@ void ButtonsDialog::setDefaultButton(QDialogButtonBox::StandardButton sb)
 }
 
 QDialogButtonBox::StandardButton ButtonsDialog::defaultButton() const
-{
-  return m_defaultButton;
-}
+{ return m_defaultButton; }
 
 void ButtonsDialog::setButtonsCentered(bool centered)
-{
-  m_buttonBox->setCenterButtons(centered);
-}
+{ m_buttonBox->setCenterButtons(centered); }
 
 bool ButtonsDialog::buttonsCentered() const
-{
-  return m_buttonBox->centerButtons();
-}
+{ return m_buttonBox->centerButtons(); }
 
 void ButtonsDialog::setMessage(const QString & message)
-{
-  m_messageLabel->setText(message);
-}
+{ m_messageLabel->setText(message); }
 
 QString ButtonsDialog::message() const
-{
-  return m_messageLabel->text();
-}
+{ return m_messageLabel->text(); }
 
 void ButtonsDialog::setTitle(const QString & title)
-{
-  setWindowTitle(title);
-}
+{ setWindowTitle(title); }
 
 QString ButtonsDialog::title() const
-{
-  return windowTitle();
-}
+{ return windowTitle(); }
 
 void ButtonsDialog::setIcon(const QIcon & icon)
 {
@@ -178,14 +162,10 @@ void ButtonsDialog::setIcon(const QIcon & icon)
 }
 
 void ButtonsDialog::setIcon(QStyle::StandardPixmap standardIcon)
-{
-  setIcon(style()->standardIcon(standardIcon));
-}
+{ setIcon(style()->standardIcon(standardIcon)); }
 
 QIcon ButtonsDialog::icon() const
-{
-  return m_icon;
-}
+{ return m_icon; }
 
 void ButtonsDialog::addExtraWidget(QWidget * widget)
 {
@@ -198,9 +178,7 @@ void ButtonsDialog::addExtraWidget(QWidget * widget)
 }
 
 QList<QWidget *> ButtonsDialog::extraWidgets() const
-{
-  return m_extraWidgets;
-}
+{ return m_extraWidgets; }
 
 void ButtonsDialog::setMemorizeEnabled(bool enabled)
 {
@@ -209,9 +187,7 @@ void ButtonsDialog::setMemorizeEnabled(bool enabled)
 }
 
 bool ButtonsDialog::memorizeEnabled() const
-{
-  return m_memorize;
-}
+{ return m_memorize; }
 
 void ButtonsDialog::slotButtonClicked(QAbstractButton * button)
 {

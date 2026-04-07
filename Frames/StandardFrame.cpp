@@ -23,9 +23,7 @@
 #define FW_LABH 30
 
 QRect StandardFrame::frameRect(const QRect & contentsRect) const
-{
-  return contentsRect.adjusted(-FW_MARGIN, -FW_MARGIN, FW_MARGIN, FW_MARGIN + FW_LABH);
-}
+{ return contentsRect.adjusted(-FW_MARGIN, -FW_MARGIN, FW_MARGIN, FW_MARGIN + FW_LABH); }
 
 void StandardFrame::layoutButtons(QList<ButtonItem *> buttons, const QRect & frameRect) const
 {

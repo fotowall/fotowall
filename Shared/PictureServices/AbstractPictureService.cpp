@@ -22,9 +22,7 @@ AbstractPictureService::AbstractPictureService(QNetworkAccessManager * manager, 
 }
 
 QNetworkReply * AbstractPictureService::get(const QNetworkRequest & request)
-{
-  return m_nam->get(request);
-}
+{ return m_nam->get(request); }
 
 QNetworkReply * AbstractPictureService::get(const QUrl & url)
 {

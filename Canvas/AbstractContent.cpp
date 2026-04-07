@@ -184,9 +184,7 @@ void AbstractContent::dispose()
 }
 
 QRect AbstractContent::contentRect() const
-{
-  return m_contentRect;
-}
+{ return m_contentRect; }
 
 void AbstractContent::resizeContents(const QRect & rect, bool keepRatio)
 {
@@ -213,9 +211,7 @@ void AbstractContent::resizeContents(const QRect & rect, bool keepRatio)
 }
 
 void AbstractContent::resetContentsRatio()
-{
-  resizeContents(m_contentRect, true);
-}
+{ resizeContents(m_contentRect, true); }
 
 void AbstractContent::delayedDirty(int ms)
 {
@@ -233,14 +229,10 @@ void AbstractContent::delayedDirty(int ms)
 }
 
 QPointF AbstractContent::previousPos() const
-{
-  return m_previousPos;
-}
+{ return m_previousPos; }
 
 void AbstractContent::setPreviousPos(const QPointF & previousPos)
-{
-  m_previousPos = previousPos;
-}
+{ m_previousPos = previousPos; }
 
 void AbstractContent::setPosUndo(const QPointF & pos)
 {
@@ -261,9 +253,7 @@ void AbstractContent::setFrame(Frame * frame)
 }
 
 quint32 AbstractContent::frameClass() const
-{
-  return m_frame ? m_frame->frameClass() : (quint32)Frame::NoFrame;
-}
+{ return m_frame ? m_frame->frameClass() : (quint32)Frame::NoFrame; }
 
 class FrameTextItem : public QGraphicsTextItem
 {
@@ -330,9 +320,7 @@ void AbstractContent::setFrameTextEnabled(bool enabled)
 }
 
 bool AbstractContent::frameTextEnabled() const
-{
-  return m_frameTextItem;
-}
+{ return m_frameTextItem; }
 
 void AbstractContent::setFrameTextReadonly(bool read)
 {
@@ -384,9 +372,7 @@ void AbstractContent::setMirrored(bool enabled)
 }
 
 bool AbstractContent::mirrored() const
-{
-  return m_mirrorItem;
-}
+{ return m_mirrorItem; }
 
 void AbstractContent::setPerspective(const QPointF & angles)
 {
@@ -399,9 +385,7 @@ void AbstractContent::setPerspective(const QPointF & angles)
 }
 
 QPointF AbstractContent::perspective() const
-{
-  return m_perspectiveAngles;
-}
+{ return m_perspectiveAngles; }
 
 #if QT_VERSION < 0x040600
 void AbstractContent::setRotation(qreal angle)
@@ -416,9 +400,7 @@ void AbstractContent::setRotation(qreal angle)
 }
 
 qreal AbstractContent::rotation() const
-{
-  return m_rotationAngle;
-}
+{ return m_rotationAngle; }
 #endif
 
 void AbstractContent::setFxIndex_(int index)
@@ -477,9 +459,7 @@ void AbstractContent::setFxIndex(int index)
 }
 
 int AbstractContent::fxIndex() const
-{
-  return m_fxIndex;
-}
+{ return m_fxIndex; }
 
 void AbstractContent::ensureVisible(const QRectF & rect)
 {
@@ -495,9 +475,7 @@ void AbstractContent::ensureVisible(const QRectF & rect)
 }
 
 bool AbstractContent::beingTransformed() const
-{
-  return m_dirtyTransforming;
-}
+{ return m_dirtyTransforming; }
 
 bool AbstractContent::fromXml(const QDomElement & contentElement, const QDir & /*baseDir*/)
 {
@@ -681,14 +659,10 @@ QPixmap AbstractContent::toPixmap(const QSize & size, Qt::AspectRatioMode ratio)
 }
 
 int AbstractContent::contentHeightForWidth(int width) const
-{
-  return width;
-}
+{ return width; }
 
 bool AbstractContent::contentOpaque() const
-{
-  return false;
-}
+{ return false; }
 
 QWidget * AbstractContent::createPropertyWidget(ContentProperties * __p)
 {
@@ -714,9 +688,7 @@ QWidget * AbstractContent::createPropertyWidget(ContentProperties * __p)
 }
 
 QRectF AbstractContent::boundingRect() const
-{
-  return m_frameRect;
-}
+{ return m_frameRect; }
 
 void AbstractContent::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
 {
@@ -807,29 +779,19 @@ QPixmap AbstractContent::ratioScaledPixmap(const QPixmap * source, const QSize &
 }
 
 void AbstractContent::hoverEnterEvent(QGraphicsSceneHoverEvent * /*event*/)
-{
-  setControlsVisible(true);
-}
+{ setControlsVisible(true); }
 
 void AbstractContent::hoverLeaveEvent(QGraphicsSceneHoverEvent * /*event*/)
-{
-  setControlsVisible(false);
-}
+{ setControlsVisible(false); }
 
 void AbstractContent::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
-{
-  QGraphicsItem::mouseReleaseEvent(event);
-}
+{ QGraphicsItem::mouseReleaseEvent(event); }
 
 void AbstractContent::dragMoveEvent(QGraphicsSceneDragDropEvent * event)
-{
-  event->accept();
-}
+{ event->accept(); }
 
 void AbstractContent::dropEvent(QGraphicsSceneDragDropEvent * event)
-{
-  event->accept();
-}
+{ event->accept(); }
 
 void AbstractContent::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
@@ -956,24 +918,16 @@ void AbstractContent::slotConfigure()
 }
 
 void AbstractContent::slotStackFront()
-{
-  emit changeStack(1);
-}
+{ emit changeStack(1); }
 
 void AbstractContent::slotStackRaise()
-{
-  emit changeStack(2);
-}
+{ emit changeStack(2); }
 
 void AbstractContent::slotStackLower()
-{
-  emit changeStack(3);
-}
+{ emit changeStack(3); }
 
 void AbstractContent::slotStackBack()
-{
-  emit changeStack(4);
-}
+{ emit changeStack(4); }
 
 void AbstractContent::slotSaveAs()
 {
@@ -1101,9 +1055,7 @@ void AbstractContent::slotReleasePerspectivePane()
 }
 
 void AbstractContent::slotOpacityChanging()
-{
-  m_opacity = contentOpacity();
-}
+{ m_opacity = contentOpacity(); }
 
 void AbstractContent::slotOpacityChanged()
 {
@@ -1132,9 +1084,7 @@ void AbstractContent::slotSetPerspective(const QPointF & sceneRelPoint, Qt::Keyb
 }
 
 void AbstractContent::slotClearPerspective()
-{
-  setPerspective(QPointF(0, 0));
-}
+{ setPerspective(QPointF(0, 0)); }
 
 void AbstractContent::slotDirtyEnded()
 {

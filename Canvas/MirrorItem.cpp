@@ -44,9 +44,7 @@ void MirrorItem::dispose()
 }
 */
 QRectF MirrorItem::boundingRect() const
-{
-  return m_boundingRect;
-}
+{ return m_boundingRect; }
 
 void MirrorItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * /*widget*/)
 {

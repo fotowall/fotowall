@@ -52,9 +52,7 @@ void BcLabel::setLast(bool last)
 }
 
 bool BcLabel::last() const
-{
-  return m_last;
-}
+{ return m_last; }
 
 void BcLabel::enterEvent(QEvent * event)
 {
@@ -117,9 +115,7 @@ void BcLabel::paintEvent(QPaintEvent * event)
 /// BcExpander
 
 BcExpander::BcExpander(quint32 expanderId, QWidget * parent) : QWidget(parent), m_exId(expanderId), m_count(1)
-{
-  setFixedSize(11, 11);
-}
+{ setFixedSize(11, 11); }
 
 void BcExpander::setCount(int count)
 {
@@ -130,9 +126,7 @@ void BcExpander::setCount(int count)
 }
 
 int BcExpander::count() const
-{
-  return m_count;
-}
+{ return m_count; }
 
 void BcExpander::mousePressEvent(QMouseEvent * event)
 {
@@ -289,9 +283,7 @@ void BreadCrumbBar::setClickableLeaves(bool clickable)
 }
 
 bool BreadCrumbBar::clickableLeaves() const
-{
-  return m_clickableLeaves;
-}
+{ return m_clickableLeaves; }
 
 void BreadCrumbBar::setDrawBackground(bool enable)
 {
@@ -303,9 +295,7 @@ void BreadCrumbBar::setDrawBackground(bool enable)
 }
 
 bool BreadCrumbBar::drawBackground() const
-{
-  return m_drawBackground;
-}
+{ return m_drawBackground; }
 
 void BreadCrumbBar::setBackgroundOffset(int side)
 {
@@ -317,9 +307,7 @@ void BreadCrumbBar::setBackgroundOffset(int side)
 }
 
 int BreadCrumbBar::backgroundOffset() const
-{
-  return m_backgroundOffset;
-}
+{ return m_backgroundOffset; }
 
 void BreadCrumbBar::paintEvent(QPaintEvent * /*event*/)
 {
@@ -428,9 +416,7 @@ void BreadCrumbBar::processLayout()
 }
 
 void BreadCrumbBar::slotLabelClicked(quint32 id)
-{
-  emit nodeClicked(id);
-}
+{ emit nodeClicked(id); }
 
 void BreadCrumbBar::slotExpanderClicked(quint32 parentId)
 {

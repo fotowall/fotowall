@@ -142,9 +142,7 @@ int WebcamContent::contentHeightForWidth(int width) const
 }
 
 bool WebcamContent::contentOpaque() const
-{
-  return true;
-}
+{ return true; }
 
 void WebcamContent::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
 {
@@ -153,9 +151,7 @@ void WebcamContent::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
 }
 
 void WebcamContent::slotToggleStill()
-{
-  m_still = !m_still;
-}
+{ m_still = !m_still; }
 
 void WebcamContent::slotToggleSwap()
 {

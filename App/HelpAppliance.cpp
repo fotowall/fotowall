@@ -91,6 +91,4 @@ HelpAppliance::~HelpAppliance()
 }
 
 void HelpAppliance::slotClose()
-{
-  App::workflow->popCurrentAppliance();
-}
+{ App::workflow->popCurrentAppliance(); }

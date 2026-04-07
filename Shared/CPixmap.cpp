@@ -69,9 +69,7 @@ void CPixmap::addEffect(const PictureEffect & effect)
 }
 
 QList<PictureEffect> CPixmap::effects() const
-{
-  return m_effects;
-}
+{ return m_effects; }
 
 void CPixmap::clearEffects()
 {

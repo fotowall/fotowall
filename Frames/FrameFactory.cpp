@@ -56,44 +56,28 @@ Frame * FrameFactory::createFrame(quint32 frameClass)
 }
 
 Frame * FrameFactory::defaultPanelFrame()
-{
-  return createFrame(factoryInstance()->m_defaultPanel);
-}
+{ return createFrame(factoryInstance()->m_defaultPanel); }
 
 Frame * FrameFactory::defaultPictureFrame()
-{
-  return createFrame(factoryInstance()->m_defaultPicture);
-}
+{ return createFrame(factoryInstance()->m_defaultPicture); }
 
 void FrameFactory::addSvgFrame(const QString & frameFilePath)
-{
-  factoryInstance()->m_svgMap[factoryInstance()->m_svgClassIndex++] = frameFilePath;
-}
+{ factoryInstance()->m_svgMap[factoryInstance()->m_svgClassIndex++] = frameFilePath; }
 
 void FrameFactory::removeFrame(const quint32 frameClass)
-{
-  factoryInstance()->m_svgMap.remove(frameClass);
-}
+{ factoryInstance()->m_svgMap.remove(frameClass); }
 
 quint32 FrameFactory::defaultPanelClass()
-{
-  return factoryInstance()->m_defaultPanel;
-}
+{ return factoryInstance()->m_defaultPanel; }
 
 void FrameFactory::setDefaultPanelClass(quint32 frameClass)
-{
-  factoryInstance()->m_defaultPanel = frameClass;
-}
+{ factoryInstance()->m_defaultPanel = frameClass; }
 
 quint32 FrameFactory::defaultPictureClass()
-{
-  return factoryInstance()->m_defaultPicture;
-}
+{ return factoryInstance()->m_defaultPicture; }
 
 void FrameFactory::setDefaultPictureClass(quint32 frameClass)
-{
-  factoryInstance()->m_defaultPicture = frameClass;
-}
+{ factoryInstance()->m_defaultPicture = frameClass; }
 
 // class impl
 FrameFactory::FrameFactory() : m_defaultPanel(Frame::BasePlasmaFrame), m_defaultPicture(Frame::StandardFrame)

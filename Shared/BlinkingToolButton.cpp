@@ -37,9 +37,7 @@
 BlinkingToolButton::BlinkingToolButton(QWidget * parent)
 : QToolButton(parent), m_palette(palette()),
   m_markPixmap(style()->standardIcon(QStyle::SP_MessageBoxWarning).pixmap(16, 16)), m_markOpacity(0)
-{
-  connect(this, SIGNAL(clicked()), this, SLOT(clearAttenction()));
-}
+{ connect(this, SIGNAL(clicked()), this, SLOT(clearAttenction())); }
 
 void BlinkingToolButton::drawAttenction()
 {
@@ -82,9 +80,7 @@ QSize BlinkingToolButton::sizeHint() const
 }
 
 QColor BlinkingToolButton::backColor() const
-{
-  return m_palette.color(QPalette::Button);
-}
+{ return m_palette.color(QPalette::Button); }
 
 void BlinkingToolButton::setBackColor(const QColor & color)
 {
@@ -97,9 +93,7 @@ void BlinkingToolButton::setBackColor(const QColor & color)
 }
 
 QColor BlinkingToolButton::textColor() const
-{
-  return m_palette.color(QPalette::ButtonText);
-}
+{ return m_palette.color(QPalette::ButtonText); }
 
 void BlinkingToolButton::setTextColor(const QColor & color)
 {
@@ -112,9 +106,7 @@ void BlinkingToolButton::setTextColor(const QColor & color)
 }
 
 qreal BlinkingToolButton::markOpacity() const
-{
-  return m_markOpacity;
-}
+{ return m_markOpacity; }
 
 void BlinkingToolButton::setMarkOpacity(qreal opacity)
 {
