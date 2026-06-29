@@ -100,7 +100,7 @@ jobs:
 
     - name: Push WebAssembly to Cloudsmith
       id: push
-      if: github.ref == 'refs/heads/topic/WebAssembly' && github.repository == 'arntanguy/fotowall'
+      if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
       uses: cloudsmith-io/action@master
       with:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -116,7 +116,7 @@ jobs:
         version: ${{ github.sha}}
 
     - name: Deploy to gh-pages 🚀
-      if: github.ref == 'refs/heads/topic/WebAssembly' && github.repository == 'arntanguy/fotowall'
+      if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: build/fotowall-webassembly # The folder the action should deploy.
