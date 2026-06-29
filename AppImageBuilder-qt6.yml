@@ -1,0 +1,35 @@
+version: 1
+script:
+  # Ensure that the mksquashfs tool is installed
+  - which mksquashfs || apt install squashfs-tools
+AppDir:
+  path: AppDir
+  app_info:
+    id: fotowall
+    name: Fotowall
+    icon: fotowall
+    version: latest
+    exec: usr/bin/fotowall
+    exec_args: $@
+  apt:
+    arch: amd64
+    sources:
+      - sourceline: deb http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse
+        key_url: 'KEY_URL'
+      - sourceline: deb http://archive.ubuntu.com/ubuntu/ noble-updates main restricted universe multiverse
+      - sourceline: deb http://archive.ubuntu.com/ubuntu/ noble-backports main restricted universe multiverse
+      - sourceline: deb http://archive.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse
+    include:
+      - libqt6core6
+      - libqt6widgets6
+      - libqt6gui6
+      - libqt6network6
+      - libqt6svg6
+      - libqt6xml6
+      - libqt6opengl6
+      - libqt6printsupport6
+      # Note: Qt6 dropped the legacy WebKit module. If your app requires a browser engine,
+      # you will need to migrate the source code to QtWebEngine and include 'libqt6webengine6' here.
+AppImage:
+  arch: x86_64
+  sign-key: None

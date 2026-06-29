@@ -32,7 +32,7 @@ jobs:
       latest-cmake: true
       matrix: |
           {
-            "dist": ["jammy", "noble", "resolute"],
+            "dist": ["jammy", "noble"],
             "arch": ["amd64"]
           }
       head-repo: "arntanguy/head"
@@ -50,16 +50,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
+        if: matrix.os == 'ubuntu-22.04' || matrix.os == 'ubuntu-24.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake doxygen qtbase5-dev libqt5svg5-dev libqt5webkit5-dev
+      - name: install dependencies (qt6)
+        if: matrix.os == 'ubuntu-26.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake doxygen qt6-base-dev qt6-svg-dev
       - name: configure
         run: cmake . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
       - name: build
         run: make -j`nproc`  install DESTDIR=AppDir
-      - name: Configure AppImageBuilder.yml
+      - name: Configure AppImageBuilder.yml (qt5)
+        if: matrix.os == 'ubuntu-22.04' || matrix.os == 'ubuntu-24.04'
         run: |
-          sed -i "s|focal|`lsb_release -cs`|g" AppImageBuilder.yml
+          sed "s|focal|`lsb_release -cs`|g" AppImageBuilder-qt5.yml > AppImageBuilder.yml
           if [[ "`lsb_release -cs`" == 'focal' ]]
           then
             sed -i "s|KEY_URL|http://keyserver.ubuntu.com/pks/lookup?op=get\&search=0x3b4fe6acc0b21f32|g" AppImageBuilder.yml
@@ -72,6 +79,13 @@ jobs:
           fi
           echo "Using the following AppImageBuilder.yml:"
           cat AppImageBuilder.yml
+      - name: Configure AppImageBuilder.yml (qt6)
+        if: matrix.os == 'ubuntu-26.04'
+        run: |
+          sed "s|noble|`lsb_release -cs`|g" AppImageBuilder-qt6.yml > AppImageBuilder.yml
+          sed -i "s|KEY_URL|http://keyserver.ubuntu.com/pks/lookup?op=get\&search=0x871920D1991BC93C|g" AppImageBuilder.yml
+          echo "Using the following AppImageBuilder.yml:"
+
       - name: Build AppImage
         uses: AppImageCrafters/build-appimage-action@master
         env:
