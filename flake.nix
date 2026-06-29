@@ -32,7 +32,7 @@
             xorg.libX11
           ];
 
-          dontWrapQtApps = false; 
+          dontWrapQtApps = false;
         };
 
         devShells.default = pkgs.mkShell {

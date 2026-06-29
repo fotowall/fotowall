@@ -171,9 +171,7 @@ void Canvas::addCanvasViewContent(const QStringList & fwFilePaths)
 }
 
 QList<AbstractContent *> Canvas::addPictureContent(const QString & fileName, const QImage & picData)
-{
-  return addPictureContent({{fileName, picData}});
-}
+{ return addPictureContent({{fileName, picData}}); }
 
 QList<AbstractContent *> Canvas::addPictureContent(const QStringList & picFilePaths)
 {
