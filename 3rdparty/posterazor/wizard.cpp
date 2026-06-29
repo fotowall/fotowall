@@ -147,10 +147,10 @@ void Wizard::setPaperFormat(const QString &format)
     m_paperFormatComboBox->setCurrentIndex(index);
 }
 
-void Wizard::setPaperOrientation(QPrinter::Orientation orientation)
+void Wizard::setPaperOrientation(QPageLayout::Orientation orientation)
 {
     (
-        orientation == QPrinter::Landscape?m_paperOrientationLandscapeRadioButton
+        orientation == QPageLayout::Landscape?m_paperOrientationLandscapeRadioButton
         :m_paperOrientationPortraitRadioButton
     )->setChecked(true);
 }
@@ -380,12 +380,12 @@ void Wizard::handlePaperFormatTabChanged(int index)
 
 void Wizard::handlePaperOrientationPortraitSelected()
 {
-    emit paperOrientationChanged(QPrinter::Portrait);
+    emit paperOrientationChanged(QPageLayout::Portrait);
 }
 
 void Wizard::handlePaperOrientationLandscapeSelected()
 {
-    emit paperOrientationChanged(QPrinter::Landscape);
+    emit paperOrientationChanged(QPageLayout::Landscape);
 }
 
 void Wizard::createConnections()

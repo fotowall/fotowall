@@ -1,0 +1,6 @@
+{
+  "name": "fotowall-qt6-emscripten",
+  "image": "ghcr.io/arntanguy/fotowall:qt6-emscripten",
+
+  "runArgs": ["--network=host"]
+}

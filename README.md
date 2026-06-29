@@ -13,7 +13,18 @@ Check out the [home page](https://www.enricoros.com/opensource/fotowall), the
 
 ## Installation
 
-We provide several installation options: AppImage or Ubuntu packages on Linux systems, Executables on Windows or build from source on other OS.
+We provide several installation options: AppImage or Ubuntu packages on Linux systems, Executables on Windows or build from source on other OS. Alternatively, you could [try it out](https://arntanguy.github.io/fotowall/fotowall.html) directly in your web browser!
+
+### Nixpkgs
+
+Use the following to run using nix:
+
+```
+nix run
+```
+
+Developpers might also be interested in using the nix developpement environment `nix develop`, set-up with all the required dependencies for building fotowall.
+You may also enable the corresponding direnv with `direnv allow` to automatically activate it.
 
 ### Packages (Ubuntu)
 
@@ -66,6 +77,21 @@ Or you can install it from our `AppImage` releases.
 ### Download
 
 On other systems, you can download the latest release from the [Releases](https://github.com/enricoros/fotowall/releases/latest) page.
+
+### Web version
+
+Fotowall is also available to use on-line directly from your web browser. Note that performance compared to the standalone desktop version is limited, and some features will not be available. Most notable lacking features are:
+
+| Feature | Supported | Details |
+| ------- | --------- | ------- |
+| Saving Fotowall projects | No | Doing so would require a way of downloading all images as well as saving the project |
+| Loading Fotowall projects | No | Doing so would require a way of uploading all images as well as saving the project |
+| All in-canvas operations | Yes | You can perform all usual operations on images/text on your canvas |
+| Exporting the canvas | Upcoming | You can export the canvas in all the usual formats |
+| Posterazor | Upcoming | |
+| Live camera | No | |
+
+** [Try it out here](https://arntanguy.github.io/fotowall/fotowall.html) **
 
 ## ChangeLog
 ### Fotowall "head" (upcoming):

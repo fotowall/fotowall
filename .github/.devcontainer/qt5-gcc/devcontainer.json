@@ -1,0 +1,29 @@
+{
+  "name": "fotowall-qt5",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "../../.."
+  },
+
+  "runArgs": ["--network=host"],
+
+  "features":
+  {
+    // "ghcr.io/duduribeiro/devcontainer-features/neovim:1": { "version": "nightly" },
+  },
+
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  },
+
+  "remoteUser": "vscode",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/workspace/fotowall,type=bind",
+  "workspaceFolder": "/home/vscode/workspace/fotowall"
+}

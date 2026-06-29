@@ -32,6 +32,12 @@
 #include <QBrush>
 #include <math.h>
 
+#if defined(__EMSCRIPTEN__)
+#include <QFile>
+#include <QFileDialog>
+#include <iostream>
+#endif
+
 const QLatin1String defaultValue_PaperFormat(           "DIN A4");
 
 const QLatin1String settingsKey_PosterSizeMode(         "PosterSizeMode");
@@ -61,7 +67,7 @@ PosteRazorCore::PosteRazorCore(ImageLoaderInterface *imageLoader, QObject *paren
     , m_posterAlignment(Qt::AlignCenter)
     , m_usesCustomPaperSize(false)
     , m_paperFormat(defaultValue_PaperFormat)
-    , m_paperOrientation(QPrinter::Portrait)
+    , m_paperOrientation(QPageLayout::Portrait)
     , m_paperBorderTop(1.5)
     , m_paperBorderRight(1.5)
     , m_paperBorderBottom(1.5)
@@ -101,7 +107,7 @@ void PosteRazorCore::readSettings(const QSettings *settings)
     m_paperFormat                  = settings->value(settingsKey_PaperFormat, m_paperFormat).toString();
     if (!Types::paperFormats().contains(m_paperFormat))
         m_paperFormat = QLatin1String(defaultValue_PaperFormat);
-    m_paperOrientation             = (QPrinter::Orientation)settings->value(settingsKey_PaperOrientation, (int)m_paperOrientation).toInt();
+    m_paperOrientation             = (QPageLayout::Orientation)settings->value(settingsKey_PaperOrientation, (int)m_paperOrientation).toInt();
     m_paperBorderTop               = settings->value(settingsKey_PaperBorderTop, m_paperBorderTop).toDouble();
     m_paperBorderRight             = settings->value(settingsKey_PaperBorderRight, m_paperBorderRight).toDouble();
     m_paperBorderBottom            = settings->value(settingsKey_PaperBorderBottom, m_paperBorderBottom).toDouble();
@@ -228,7 +234,7 @@ void PosteRazorCore::setPaperFormat(const QString &format)
     m_paperFormat = format;
 }
 
-void PosteRazorCore::setPaperOrientation(QPrinter::Orientation orientation)
+void PosteRazorCore::setPaperOrientation(QPageLayout::Orientation orientation)
 {
     m_paperOrientation = orientation;
 }
@@ -258,7 +264,7 @@ const QString PosteRazorCore::paperFormat() const
     return m_paperFormat;
 }
 
-QPrinter::Orientation PosteRazorCore::paperOrientation() const
+QPageLayout::Orientation PosteRazorCore::paperOrientation() const
 {
     return m_paperOrientation;
 }
@@ -805,6 +811,16 @@ int PosteRazorCore::savePoster(const QString &fileName) const
         }
         err = pdfWriter.finishSaving();
     }
+
+#if defined(__EMSCRIPTEN__)
+  QFile pdfFile("fotowall_poster.pdf"); // Read PDF stored in local browser storage
+  pdfFile.open(QIODevice::ReadOnly);
+  QByteArray content = pdfFile.readAll();
+  std::cout << "Content size is " << content.size() << std::endl;
+  pdfFile.remove();
+
+  QFileDialog::saveFileContent(content, "fotowall_poster.pdf"); // download pdf
+#endif
 
     return err;
 }

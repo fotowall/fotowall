@@ -65,6 +65,12 @@ private Q_SLOTS:
 // Move the following classes to a _p.h
 #include <QLabel>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+using EnterEvent = QEnterEvent;
+#else
+using EnterEvent = QEvent;
+#endif
+
 class BcLabel : public QLabel
 {
   Q_OBJECT
@@ -75,7 +81,7 @@ public:
   bool last() const;
 
   // ::QWidget
-  void enterEvent(QEvent * event);
+  void enterEvent(EnterEvent * event);
   void leaveEvent(QEvent * event);
   void keyPressEvent(QKeyEvent * event);
   void mousePressEvent(QMouseEvent * event);

@@ -31,5 +31,4 @@ AppDir:
     - libqt5printsupport5
 AppImage:
   arch: x86_64
-  update-information: !ENV ${UPDATE_INFO}
   sign-key: None
