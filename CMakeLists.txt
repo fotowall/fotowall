@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.22)
 project(fotowall)
 
 find_program(CCACHE_PROGRAM ccache)
