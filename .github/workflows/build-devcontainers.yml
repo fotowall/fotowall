@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: [ "qt5-emscripten", "qt5-gcc", "qt6-emscripten", "qt6-gcc" ]
+        container: [ "qt5-gcc", "qt6-emscripten", "qt6-gcc" ]
     steps:
     - name: Maximize build space
       shell: bash
