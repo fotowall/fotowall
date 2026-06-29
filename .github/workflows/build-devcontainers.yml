@@ -18,7 +18,7 @@ on:
 
 jobs:
   build_devcontainers:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions: write-all
     strategy:
       fail-fast: false
@@ -58,9 +58,7 @@ jobs:
     needs: build_devcontainers
     strategy:
       fail-fast: false
-      matrix:
-        os: ["ubuntu_22.04"]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
       with:
