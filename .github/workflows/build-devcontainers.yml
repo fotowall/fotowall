@@ -42,15 +42,15 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Pre-build dev container image
+      if:  github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
       uses: devcontainers/ci@v0.3
       with:
-        # FIXME: Change this to fotowall/fotowall when merging
         # Not allowed in pull requests
-        imageName: ghcr.io/arntanguy/fotowall
+        imageName: ghcr.io/fotowall/fotowall
         imageTag: ${{ matrix.container }}
         subFolder: .github/.devcontainer/${{ matrix.container }}
         configFile: .github/.devcontainer/${{ matrix.container }}/devcontainer.json
-        cacheFrom: ghcr.io/arntanguy/fotowall
+        cacheFrom: ghcr.io/fotowall/fotowall
         push: always
 
 
@@ -74,7 +74,6 @@ jobs:
     - name: Build and run Dev Container task
       uses: devcontainers/ci@v0.3
       with:
-        # FIXME Change this to fotowall/fotowall when merging
         configFile: .devcontainer/qt6-emscripten/devcontainer.json
         push: never
         # Change this to be your CI task/script
