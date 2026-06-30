@@ -95,22 +95,23 @@ jobs:
         ls -R $GITHUB_WORKSPACE/build/fotowall-webassembly
         echo "::endgroup::"
 
+    - name: Install and Authenticate Cloudsmith CLI
+      if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
+      uses: cloudsmith-io/cloudsmith-cli-action@v2
+      with:
+        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+
     - name: Push WebAssembly to Cloudsmith
       id: push
       if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
-      uses: cloudsmith-io/action@master
-      with:
-        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-        command: "push"
-        format: "raw"
-        owner: "arntanguy"
-        repo: "head"
-        file: "$GITHUB_WORKSPACE/build/fotowall-webassembly.tar.gz"
-        tags: "latest"
-        name: "fotowall-webassembly-latest.tar.gz"
-        summary: "Upload latest webassembly build"
-        description: "See https://github.com/cloudsmith-io/action"
-        version: ${{ github.sha}}
+      run: |
+        cloudsmith push raw arntanguy/head/latest \
+          --file "$GITHUB_WORKSPACE/build/fotowall-webassembly.tar.gz" \
+          --name "fotowall-webassembly-latest.tar.gz" \
+          --summary "Upload latest webassembly build" \
+          --description "See https://github.com/cloudsmith-io/action" \
+          --version "${{ github.sha }}" \
+          --republish
 
     - name: Deploy to gh-pages 🚀
       if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
