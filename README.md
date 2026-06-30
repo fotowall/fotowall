@@ -94,9 +94,12 @@ Fotowall is also available to use on-line directly from your web browser [here](
 ** [Try it out here](https://fotowall.github.io/fotowall/fotowall.html) **
 
 ## ChangeLog
-### Fotowall "head" (upcoming):
+### Fotowall "REVIVAL" (2026-06-30):
 * Undo/Redo system
-* Ubuntu packaging
+* Ubuntu packaging for 22.04 and 24.04
+* AppImage packaging for 22.04, 24.04 and 26.04
+* Qt6 support
+* Webassembly support for web demo
 
 ### Fotowall "RETRO" 1.0 (2017-07-09):
 * Picture cropping (reqby Rossana)
