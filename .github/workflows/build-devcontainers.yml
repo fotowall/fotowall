@@ -2,7 +2,7 @@ name: Build Devcontainers
 
 on:
   push:
-    paths-ignore:
+    paths-ignore: &paths-ignore
       # Changes to those files don't mandate running CI
       - ".github/workflows/package.yml"
       - ".github/workflows/build.yml"
@@ -11,10 +11,9 @@ on:
       - "doc/**"
       - ".pre-commit-config.yaml"
     branches:
-      - '**'
+      - 'master'
   pull_request:
-    branches:
-      - '**'
+    paths-ignore: *paths-ignore
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

@@ -5,19 +5,18 @@ on:
     - package-master
     - package-release
   push:
-    paths-ignore:
+    paths-ignore: &path-ignore
     - doc/**
     - README.md
     - ".github/workflows/build.yml"
     - ".github/workflows/webassembly.yml"
     - ".pre-commit-config.yaml"
     branches:
-    - "**"
+    - master
     tags:
     - v*
   pull_request:
-    branches:
-    - "**"
+    paths-ignore: *path-ignore
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
