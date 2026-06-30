@@ -103,10 +103,10 @@ jobs:
         id: push
         if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
         run: |
-          cloudsmith push raw arntanguy/head/focal \
-            --file "./Fotowall-latest-x86_64.AppImage" \
+          cloudsmith push raw arntanguy/head "./Fotowall-latest-x86_64.AppImage" \
+            --tags "`lsb_release -cs`" \
             --name "Fotowall-latest-x86_64-${{ matrix.os }}.AppImage" \
             --summary "Upload latest raw AppImage" \
             --description "See https://github.com/cloudsmith-io/action" \
-            --version "${{ github.sha }}"
+            --version "${{ github.sha }}" \
             --republish

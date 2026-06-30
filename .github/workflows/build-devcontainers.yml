@@ -105,8 +105,8 @@ jobs:
       id: push
       if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
       run: |
-        cloudsmith push raw arntanguy/head/latest \
-          --file "$GITHUB_WORKSPACE/build/fotowall-webassembly.tar.gz" \
+        cloudsmith push raw arntanguy/head "$GITHUB_WORKSPACE/build/fotowall-webassembly.tar.gz" \
+          --tags "latest" \
           --name "fotowall-webassembly-latest.tar.gz" \
           --summary "Upload latest webassembly build" \
           --description "See https://github.com/cloudsmith-io/action" \
