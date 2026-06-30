@@ -19,17 +19,13 @@
 
           nativeBuildInputs = with pkgs; [
             cmake
-            ninja
-            pkg-config
-            # ccache removed here
+            # ninja
             qt6.wrapQtAppsHook
           ];
 
           buildInputs = with pkgs; [
             qt6.qtbase
             qt6.qtsvg
-            qt6.qt5compat
-            xorg.libX11
           ];
 
           dontWrapQtApps = false;

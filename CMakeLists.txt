@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(
-  fotowall
-  LANGUAGES CXX
-  VERSION 1.1.0)
+# cmake-format: off
+project(fotowall VERSION 1.1.1 LANGUAGES CXX)
+# cmake-format: on
 
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
