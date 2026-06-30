@@ -26,7 +26,7 @@ nix run github:fotowall/fotowall
 Developpers might also be interested in using the nix developpement environment `nix develop`, set-up with all the required dependencies for building fotowall.
 You may also enable the corresponding direnv with `direnv allow` to automatically activate it.
 
-### Packages (Ubuntu 22.04, 24.04)
+### Packages (Ubuntu 22.04, 24.04, 26.04)
 
 We provide two repositories to install Fotowall from on Ubuntu: the `stable` repository contains packages for the latest release, the `head` repository contains the latest developpement version (github's main branch).
 
