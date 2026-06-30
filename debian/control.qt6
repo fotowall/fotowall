@@ -1,0 +1,22 @@
+Source: fotowall
+Priority: optional
+Maintainer: Arnaud TANGUY <arn.tanguy+ppa+ppa@gmail.com>
+Standards-Version: 3.9.5
+Section: main
+Homepage: http://github.com/enricoros/fotowall
+Vcs-Git: git://github.com/enricoros/fotowall -b debian
+Vcs-Browser: http://github.com/enricoros/fotowall
+Build-Depends: debhelper (>= 9),
+ pkg-config,
+ cmake,
+ doxygen,
+ qt6-base-dev,
+ qt6-svg-dev
+
+Package: fotowall
+Section: main
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Description: Fotowall: Picture Collage and Creativity App
+  Fotowall is a desktop APP that lets you create graphical compositions by layering and manipulating photos and pictures, text, live video, wordclouds, and drag&drop content from the internet. All to create a fun graphical composition with the maximum ease of use!
