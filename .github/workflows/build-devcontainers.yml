@@ -95,6 +95,7 @@ jobs:
         cd $GITHUB_WORKSPACE/build
         mkdir fotowall-webassembly
         cp fotowall.js fotowall.html fotowall.wasm qtloader.js qtlogo.svg fotowall-webassembly
+        mv fotowall-webassembly/fotowall.html fotowall-webassembly/index.html
         tar -czf fotowall-webassembly.tar.gz fotowall-webassembly
         cp -r fotowall-webassembly /home/runner/work/fotowall/fotowall
         echo "::endgroup::"
