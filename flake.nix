@@ -36,10 +36,6 @@
 
           packages = with pkgs; [
             gdb
-            clazy
-            clang-tools
-            cmake-language-server
-            bashInteractive
           ];
 
           shellHook = ''
