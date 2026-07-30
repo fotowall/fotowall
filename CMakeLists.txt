@@ -330,7 +330,7 @@ if(Qt5_FOUND)
            Qt5::Core
            # Qt5::WebKit Qt5::WebKitWidgets
            Qt5::PrintSupport
-           X11)
+           $<$<PLATFORM_ID:Linux>:X11>)
 elseif(Qt6_FOUND)
   target_link_libraries(
     fotowall
@@ -344,7 +344,7 @@ elseif(Qt6_FOUND)
            Qt6::Core
            # Qt6::WebKit Qt6::WebKitWidgets
            Qt6::PrintSupport
-           X11)
+           $<$<PLATFORM_ID:Linux>:X11>)
 endif()
 target_include_directories(fotowall
                            PRIVATE ${CMAKE_SOURCE_DIR}/3rdparty/posterazor/)
