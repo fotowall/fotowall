@@ -17,6 +17,8 @@
 #ifndef __enricomath_h__
 #define __enricomath_h__
 
+#include <cmath>
+
 // uncomment the following to perform checks on operations (slow, safer)
 #define VECTOR_CHECK_MATH
 
@@ -502,8 +504,9 @@ inline Vector3 & Vector3::rotate( double radians, const Vector3 & axis )
     }
 #endif
     // definisce costanti del quaternione (re: rot, imm: axis)
-    double mSin, mCos;
-    sincos( radians / 2.0, &mSin, &mCos );
+    auto h_radians = radians / 2.0;
+    auto mSin = std::sin(h_radians);
+    auto mCos = std::cos(h_radians);
     mSin /= axis.module();
     double a = mCos, b = mSin*axis.m_x, c = mSin*axis.m_y, d = mSin*axis.m_z;
     // precalcola 10 costanti di rotazione
@@ -659,8 +662,9 @@ inline Quaternion::Quaternion()
 inline Quaternion::Quaternion( double radians, const Vector3 & axis )
     : m_a( 1.0 ), m_b( 0.0 ), m_c( 0.0 ), m_d( 0.0 )
 {
-    double mSin, mCos;
-    sincos( radians / 2.0, &mSin, &mCos );
+    double r = radians / 2.0;
+    auto mSin = std::sin(r);
+    auto mCos = std::cos(r);
 #ifdef VECTOR_CHECK_MATH
     if ( axis.isNull() ) {
         printf("Quaternion: constructing one with a null axis!\n");
@@ -673,10 +677,15 @@ inline Quaternion::Quaternion( double radians, const Vector3 & axis )
 
 inline Quaternion::Quaternion( double yaw, double pitch, double roll )
 {
-    double s_yaw, c_yaw, s_pitch, c_pitch, s_roll, c_roll;
-    sincos( yaw / 2.0, &s_yaw, &c_yaw );
-    sincos( pitch / 2.0, &s_pitch, &c_pitch );
-    sincos( roll / 2.0, &s_roll, &c_roll );
+    double h_yaw = yaw / 2.0;
+    double h_pitch = pitch / 2.0;
+    double h_roll = roll / 2.0;
+    auto s_yaw = std::sin(h_yaw);
+    auto c_yaw = std::cos(h_yaw);
+    auto s_pitch = std::sin(h_pitch);
+    auto c_pitch = std::cos(h_pitch);
+    auto s_roll = std::sin(h_roll);
+    auto c_roll = std::cos(h_roll);
     m_a = c_roll * c_pitch * c_yaw + s_roll * s_pitch * s_yaw;
     m_b = s_roll * c_pitch * c_yaw - c_roll * s_pitch * s_yaw;
     m_c = c_roll * s_pitch * c_yaw + s_roll * c_pitch * s_yaw;
