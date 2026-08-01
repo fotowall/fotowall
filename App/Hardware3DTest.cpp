@@ -21,11 +21,11 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QElapsedTimer>
 #include <QGraphicsView>
 #include <QLabel>
 #include <QPaintEvent>
 #include <QPushButton>
-#include <QElapsedTimer>
 #include <QTimer>
 #include <QVBoxLayout>
 #ifdef Q_OS_UNIX
