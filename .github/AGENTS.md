@@ -82,6 +82,26 @@ Runs on every push/PR to `master` (excluding packaging and documentation changes
 | `GH_PAGES_TOKEN` | `package.yml` (Cloudsmith push of packages) |
 | `GITHUB_TOKEN` | `windows.yml` (GitHub Release), `build-devcontainers.yml` (GHCR push) |
 
+## Pre-commit
+
+The repository uses [pre-commit](https://pre-commit.com/) to enforce code style (clang-format, cmake-format) and basic hygiene checks.
+
+**Install pre-commit:**
+
+```sh
+pip install pre-commit
+pre-commit install
+```
+
+**Run all hooks against every file:**
+
+```sh
+pre-commit run -a
+```
+
+Hooks are configured in `.pre-commit-config.yaml` and cover C/C++ formatting (`clang-format`), CMake formatting (`cmake-format`), and general file checks (trailing whitespace, merge-conflict markers, large files, private keys, etc.).
+Paths under `3rdparty/`, `translations/`, and `*.svg` files are excluded from all hooks.
+
 ## Coding Agent Guidelines
 
 When working on this repository, keep the following in mind:
