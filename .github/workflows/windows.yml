@@ -31,11 +31,27 @@ jobs:
       - name: Prepare dist directory
         run: |
           mkdir dist
-          copy Release\Fotowall.exe dist\
+          copy Release\fotowall.exe dist\
 
       - name: Deploy Qt DLLs
         run: |
-          windeployqt dist\Fotowall.exe
+          windeployqt dist\fotowall.exe
+
+      - name: Smoke test bundled executable
+        run: |
+          $proc = Start-Process -FilePath "dist\fotowall.exe" `
+            -ArgumentList "" `
+            -Environment @{ QT_QPA_PLATFORM = "offscreen" } `
+            -PassThru -NoNewWindow
+          Start-Sleep -Seconds 5
+          if ($proc.HasExited -and $proc.ExitCode -ne 0) {
+            Write-Error "fotowall.exe exited with code $($proc.ExitCode) — possible missing DLLs or startup crash"
+            exit 1
+          }
+          if (-not $proc.HasExited) {
+            $proc.Kill()
+          }
+          Write-Host "Smoke test passed"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
