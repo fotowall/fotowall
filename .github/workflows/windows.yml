@@ -1,0 +1,52 @@
+name: Windows Release
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt (Qt5)
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '5.15.2'
+
+      - name: Install CMake
+        uses: jwlawson/actions-setup-cmake@v2
+
+      - name: Configure
+        run: cmake . -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build . --config Release
+
+      - name: Prepare dist directory
+        run: |
+          mkdir dist
+          copy Release\Fotowall.exe dist\
+
+      - name: Deploy Qt DLLs
+        run: |
+          windeployqt dist\Fotowall.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fotowall-windows
+          path: dist/
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: dist/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
