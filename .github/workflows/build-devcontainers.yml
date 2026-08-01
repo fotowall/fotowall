@@ -104,7 +104,7 @@ jobs:
 
     - name: Install and Authenticate Cloudsmith CLI
       if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
-      uses: cloudsmith-io/cloudsmith-cli-action@v2
+      uses: cloudsmith-io/cloudsmith-cli-action@v2.0.3
       with:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
 
