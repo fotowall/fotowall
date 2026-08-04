@@ -46,7 +46,7 @@ AppDir:
     - libxkbcommon0
     - libfontconfig1
     - libfreetype6
-    - libasound2t64
+    - libasound2
 AppImage:
   arch: x86_64
   sign-key: None
