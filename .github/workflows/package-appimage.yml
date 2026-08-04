@@ -97,12 +97,19 @@ jobs:
       - name: Smoke test AppImage
         id: appimage-smoke-test
         run: |
+          set -euo pipefail
           cp ./Fotowall-latest-x86_64.AppImage /tmp/Fotowall-latest-x86_64.AppImage
           chmod +x /tmp/Fotowall-latest-x86_64.AppImage
           /tmp/Fotowall-latest-x86_64.AppImage --appimage-extract
           test -x squashfs-root/AppRun
           test -x squashfs-root/usr/bin/fotowall
-          ! ldd squashfs-root/usr/bin/fotowall | grep -q "not found"
+
+          ldd squashfs-root/usr/bin/fotowall | tee /tmp/fotowall-ldd.txt
+          if grep -q "not found" /tmp/fotowall-ldd.txt; then
+            echo "::error::AppImage has unresolved shared libraries"
+            grep "not found" /tmp/fotowall-ldd.txt
+            exit 1
+          fi
       - name: Upload tested AppImage artifact
         uses: actions/upload-artifact@v4
         with:
