@@ -116,13 +116,6 @@ jobs:
             grep "not found" /tmp/fotowall-ldd.txt
             exit 1
           fi
-      - name: Upload tested AppImage artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Fotowall-latest-x86_64-${{ matrix.os }}-tested
-          path: |
-            ./Fotowall-latest-x86_64.AppImage
-          if-no-files-found: error
 
   upload:
     needs: smoketest
@@ -131,17 +124,10 @@ jobs:
     name: Upload AppImage to Cloudsmith (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v7
-      - name: Download tested AppImage artifact
+      - name: Download AppImage artifact
         uses: actions/download-artifact@v4
         with:
-          name: Fotowall-latest-x86_64-${{ matrix.os }}-tested
-      - name: Upload AppImage artifact
-        uses: actions/upload-artifact@v4
-        with:
           name: Fotowall-latest-x86_64-${{ matrix.os }}
-          path: |
-            ./Fotowall-latest-x86_64.AppImage
-          if-no-files-found: error
       - name: Install and Authenticate Cloudsmith CLI
         if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
         uses: cloudsmith-io/cloudsmith-cli-action@v2.0.3
