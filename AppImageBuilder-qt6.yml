@@ -33,7 +33,6 @@ AppDir:
       - libqt6dbus6
       - libqt6multimedia6
       - libqt6multimediawidgets6
-      - libqt6xmlpatterns6
       - libglu1-mesa
       - libgl1
       - libx11-6
@@ -45,7 +44,7 @@ AppDir:
       - libxkbcommon0
       - libfontconfig1
       - libfreetype6
-      - libasound2
+      - libasound2t64
       # Note: Qt6 dropped the legacy WebKit module. If your app requires a browser engine,
       # you will need to migrate the source code to QtWebEngine and include 'libqt6webengine6' here.
 AppImage:
