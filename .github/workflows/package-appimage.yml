@@ -25,13 +25,11 @@ permissions:
 
 jobs:
   build:
-    strategy:
+    strategy: &strategy
       fail-fast: false
       matrix:
         os: [ubuntu-22.04, ubuntu-24.04, ubuntu-26.04]
     runs-on: ${{ matrix.os }}
-    outputs:
-      os: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
       - name: install dependencies (qt5)
@@ -64,11 +62,9 @@ jobs:
 
       - name: Copy OpenGL/EGL libraries to AppDir
         run: |
-          find /usr -name 'libEGL.so*'
-          find /usr -name 'libOpenGL.so*'
+          mkdir -p AppDir/usr/lib
           cp /usr/lib/x86_64-linux-gnu/libEGL.so.1 AppDir/usr/lib/ || true
           cp /usr/lib/x86_64-linux-gnu/libOpenGL.so.0 AppDir/usr/lib/ || true
-
 
       - name: Build AppImage
         run: |
@@ -95,14 +91,15 @@ jobs:
 
   smoketest:
     needs: build
-    runs-on: ${{ needs.build.outputs.os }}
-    name: Smoke test AppImage (${{ needs.build.outputs.os }})
+    strategy: *strategy
+    runs-on: ${{ matrix.os }}
+    name: Smoke test AppImage (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v7
       - name: Download AppImage artifact
         uses: actions/download-artifact@v4
         with:
-          name: Fotowall-latest-x86_64-${{ needs.build.outputs.os }}
+          name: Fotowall-latest-x86_64-${{ matrix.os }}
       - name: Smoke test AppImage
         id: appimage-smoke-test
         run: |
@@ -122,24 +119,26 @@ jobs:
       - name: Upload tested AppImage artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Fotowall-latest-x86_64-${{ needs.build.outputs.os }}-tested
+          name: Fotowall-latest-x86_64-${{ matrix.os }}-tested
           path: |
             ./Fotowall-latest-x86_64.AppImage
           if-no-files-found: error
 
   upload:
     needs: smoketest
-    runs-on: ${{ needs.build.outputs.os }}
+    strategy: *strategy
+    runs-on: ${{ matrix.os }}
+    name: Upload AppImage to Cloudsmith (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v7
       - name: Download tested AppImage artifact
         uses: actions/download-artifact@v4
         with:
-          name: Fotowall-latest-x86_64-${{ needs.build.outputs.os }}-tested
+          name: Fotowall-latest-x86_64-${{ matrix.os }}-tested
       - name: Upload AppImage artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Fotowall-latest-x86_64-${{ needs.build.outputs.os }}
+          name: Fotowall-latest-x86_64-${{ matrix.os }}
           path: |
             ./Fotowall-latest-x86_64.AppImage
           if-no-files-found: error
@@ -154,7 +153,7 @@ jobs:
         run: |
           cloudsmith push raw arntanguy/head "./Fotowall-latest-x86_64.AppImage" \
             --tags "`lsb_release -cs`" \
-            --name "Fotowall-latest-x86_64-${{ needs.build.outputs.os }}.AppImage" \
+            --name "Fotowall-latest-x86_64-${{ matrix.os }}.AppImage" \
             --summary "Upload latest raw AppImage" \
             --description "See https://github.com/cloudsmith-io/action" \
             --version "${{ github.sha }}" \
