@@ -112,6 +112,23 @@ jobs:
         with:
           recipe: AppImageBuilder.yml
 
+      - name: Smoke test AppImage
+        run: |
+          chmod +x ./Fotowall-latest-x86_64.AppImage
+          ./Fotowall-latest-x86_64.AppImage --appimage-extract
+          test -x squashfs-root/AppRun
+          test -x squashfs-root/usr/bin/fotowall
+          ldd squashfs-root/usr/bin/fotowall | grep -q "not found" && exit 1 || true
+
+      - name: Upload AppImage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fotowall-latest-x86_64-${{ matrix.os }}
+          path: |
+            ./Fotowall-latest-x86_64.AppImage
+            ./Fotowall-latest-x86_64.AppImage.zsync
+          if-no-files-found: error
+
       - name: Install and Authenticate Cloudsmith CLI
         if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
         uses: cloudsmith-io/cloudsmith-cli-action@v2.0.3

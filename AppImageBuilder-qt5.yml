@@ -29,6 +29,24 @@ AppDir:
     - libqt5opengl5
     - libqt5webkit5
     - libqt5printsupport5
+    - libqt5concurrent5
+    - libqt5dbus5
+    - libqt5multimedia5
+    - libqt5multimediawidgets5
+    - libqt5xmlpatterns5
+    - libqt5x11extras5
+    - libglu1-mesa
+    - libgl1
+    - libx11-6
+    - libxext6
+    - libxrender1
+    - libxrandr2
+    - libxi6
+    - libxfixes3
+    - libxkbcommon0
+    - libfontconfig1
+    - libfreetype6
+    - libasound2
 AppImage:
   arch: x86_64
   sign-key: None
