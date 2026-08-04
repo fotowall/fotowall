@@ -21,6 +21,7 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QElapsedTimer>
 #include <QGraphicsView>
 #include <QLabel>
 #include <QPaintEvent>
@@ -314,10 +315,10 @@ void TimedSceneView::paintEvent(QPaintEvent * event)
   const bool doMeasure = m_measureRepaint && event->rect().size() == FIXEDSIZE;
   if(doMeasure) ::gettimeofday(&tStart, 0);
 #else
-  QTime * time = 0;
+  QElapsedTimer * time = 0;
   if(m_measureRepaint && event->rect().size() == FIXEDSIZE)
   {
-    time = new QTime;
+    time = new QElapsedTimer;
     time->start();
   }
 #endif
