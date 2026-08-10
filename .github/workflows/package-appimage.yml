@@ -144,3 +144,11 @@ jobs:
             --description "See https://github.com/cloudsmith-io/action" \
             --version "${{ github.sha }}" \
             --republish
+      - name: Upload AppImage to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./Fotowall-latest-x86_64.AppImage
+          asset_name: Fotowall-latest-x86_64-${{ matrix.os }}.AppImage
+          asset_content_type: application/octet-stream
