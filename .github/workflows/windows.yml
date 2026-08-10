@@ -71,16 +71,21 @@ jobs:
           }
           Write-Host "Smoke test passed"
 
+      - name: Create zip archive
+        run: |
+          Compress-Archive -Path dist\* -DestinationPath fotowall-windows.zip
+        shell: pwsh
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: fotowall-windows
-          path: dist/
+          path: fotowall-windows.zip
 
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: dist/**
+          files: fotowall-windows.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
