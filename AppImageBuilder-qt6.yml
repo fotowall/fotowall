@@ -27,6 +27,7 @@ AppDir:
       - libqt6svg6
       - libqt6xml6
       - libqt6opengl6
+      - libqt6openglwidgets6
       - libqt6printsupport6
       # Note: Qt6 dropped the legacy WebKit module. If your app requires a browser engine,
       # you will need to migrate the source code to QtWebEngine and include 'libqt6webengine6' here.

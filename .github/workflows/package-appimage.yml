@@ -1,0 +1,154 @@
+name: Package - AppImage
+on:
+  repository_dispatch:
+    types:
+    - package-master
+    - package-release
+  push:
+    paths-ignore: &path-ignore
+    - doc/**
+    - README.md
+    - ".github/workflows/build.yml"
+    - ".github/workflows/webassembly.yml"
+    - ".pre-commit-config.yaml"
+    branches:
+    - master
+    tags:
+    - v*
+  pull_request:
+    paths-ignore: *path-ignore
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy: &strategy
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, ubuntu-26.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: install dependencies (qt5)
+        if: matrix.os == 'ubuntu-22.04' || matrix.os == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake doxygen qtbase5-dev libqt5svg5-dev libqt5webkit5-dev libegl1 libopengl0
+      - name: install dependencies (qt6)
+        if: matrix.os == 'ubuntu-26.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake doxygen qt6-base-dev qt6-svg-dev libegl1 libopengl0
+      - name: configure
+        run: cmake . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+      - name: build
+        run: make -j$(nproc) install DESTDIR=AppDir
+
+      - name: Download linuxdeploy and plugin
+        run: |
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy-*.AppImage
+
+      - name: Prepare desktop file and icon
+        run: |
+          mkdir -p AppDir/usr/share/applications
+          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+          cp fotowall.desktop AppDir/usr/share/applications/fotowall.desktop
+          cp fotowall.png AppDir/usr/share/icons/hicolor/256x256/apps/fotowall.png
+
+      - name: Copy OpenGL/EGL libraries to AppDir
+        run: |
+          mkdir -p AppDir/usr/lib
+          cp /usr/lib/x86_64-linux-gnu/libEGL.so.1 AppDir/usr/lib/ || true
+          cp /usr/lib/x86_64-linux-gnu/libOpenGL.so.0 AppDir/usr/lib/ || true
+
+      - name: Build AppImage
+        run: |
+          ./linuxdeploy-x86_64.AppImage --appdir AppDir \
+            -e AppDir/usr/bin/fotowall \
+            -d AppDir/usr/share/applications/fotowall.desktop \
+            -i AppDir/usr/share/icons/hicolor/256x256/apps/fotowall.png \
+            --plugin qt \
+            --library /usr/lib/x86_64-linux-gnu/libEGL.so.1 \
+            --library /usr/lib/x86_64-linux-gnu/libOpenGL.so.0 \
+            --output appimage
+
+      - name: Rename AppImage
+        run: |
+          mv Fotowall*.AppImage Fotowall-latest-x86_64.AppImage || mv *.AppImage Fotowall-latest-x86_64.AppImage
+
+      - name: Upload AppImage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fotowall-latest-x86_64-${{ matrix.os }}
+          path: |
+            ./Fotowall-latest-x86_64.AppImage
+          if-no-files-found: error
+
+  smoketest:
+    needs: build
+    strategy: *strategy
+    runs-on: ${{ matrix.os }}
+    name: Smoke test AppImage (${{ matrix.os }})
+    steps:
+      - uses: actions/checkout@v7
+      - name: Download AppImage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Fotowall-latest-x86_64-${{ matrix.os }}
+      - name: Smoke test AppImage
+        id: appimage-smoke-test
+        run: |
+          set -euo pipefail
+          cp ./Fotowall-latest-x86_64.AppImage /tmp/Fotowall-latest-x86_64.AppImage
+          chmod +x /tmp/Fotowall-latest-x86_64.AppImage
+          /tmp/Fotowall-latest-x86_64.AppImage --appimage-extract
+          test -x squashfs-root/AppRun
+          test -x squashfs-root/usr/bin/fotowall
+
+          ldd squashfs-root/usr/bin/fotowall | tee /tmp/fotowall-ldd.txt
+          if grep -q "not found" /tmp/fotowall-ldd.txt; then
+            echo "::error::AppImage has unresolved shared libraries"
+            grep "not found" /tmp/fotowall-ldd.txt
+            exit 1
+          fi
+
+  upload:
+    needs: smoketest
+    strategy: *strategy
+    runs-on: ${{ matrix.os }}
+    name: Upload AppImage to Cloudsmith (${{ matrix.os }})
+    steps:
+      - uses: actions/checkout@v7
+      - name: Download AppImage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Fotowall-latest-x86_64-${{ matrix.os }}
+      - name: Install and Authenticate Cloudsmith CLI
+        if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
+        uses: cloudsmith-io/cloudsmith-cli-action@v2.0.3
+        with:
+          api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+      - name: Push to Cloudsmith
+        id: push
+        if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
+        run: |
+          cloudsmith push raw arntanguy/head "./Fotowall-latest-x86_64.AppImage" \
+            --tags "`lsb_release -cs`" \
+            --name "Fotowall-latest-x86_64-${{ matrix.os }}.AppImage" \
+            --summary "Upload latest raw AppImage" \
+            --description "See https://github.com/cloudsmith-io/action" \
+            --version "${{ github.sha }}" \
+            --republish
+      - name: Upload AppImage to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./Fotowall-latest-x86_64.AppImage
+          asset_name: Fotowall-latest-x86_64-${{ matrix.os }}.AppImage
+          asset_content_type: application/octet-stream
