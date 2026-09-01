@@ -15,7 +15,7 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Check version coherency
         if: startsWith(github.ref, 'refs/tags/')
         shell: bash
