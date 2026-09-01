@@ -97,7 +97,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Download AppImage artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: Fotowall-latest-x86_64-${{ matrix.os }}
       - name: Smoke test AppImage
@@ -125,7 +125,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Download AppImage artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: Fotowall-latest-x86_64-${{ matrix.os }}
       - name: Install and Authenticate Cloudsmith CLI
