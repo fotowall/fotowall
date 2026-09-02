@@ -1294,7 +1294,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location line="+57"/>
-        <source>&apos;RETRO&apos; </source>
+        <source>&apos;REVIVAL&apos; </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1347,7 +1347,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location line="+62"/>
-        <source>&apos;RETRO&apos; </source>
+        <source>&apos;REVIVAL&apos; </source>
         <translation type="unfinished"></translation>
     </message>
     <message>

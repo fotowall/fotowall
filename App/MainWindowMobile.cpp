@@ -148,7 +148,7 @@ void MainWindowMobile::applianceSetTitle(const QString & title)
 {
   QString tString = title.isEmpty() ? QString() : title + " - ";
   tString += QCoreApplication::applicationName() + " ";
-  if(title.isEmpty()) tString += tr("'RETRO' ");
+  if(title.isEmpty()) tString += tr("'REVIVAL' ");
   tString += QCoreApplication::applicationVersion();
   setWindowTitle(tString);
 }

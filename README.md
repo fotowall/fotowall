@@ -101,7 +101,7 @@ Fotowall is also available to use on-line directly from your web browser [here](
 * Qt6 support
 * Webassembly support for web demo
 
-### Fotowall "RETRO" 1.0 (2017-07-09):
+### Fotowall "REVIVAL" 1.0 (2017-07-09):
 * Picture cropping (reqby Rossana)
 * Exporters: vast improvements, high-quality print-ready PDF output
 * Wordcloud editor

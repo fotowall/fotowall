@@ -82,8 +82,8 @@ int main(int argc, char ** args)
 
   QApplication app(argc, args);
   app.setApplicationName("Fotowall");
-  app.setApplicationVersion("1.0");
-  app.setOrganizationName("Enrico Ros");
+  app.setApplicationVersion("1.1.4");
+  app.setOrganizationName("Fotowall");
 #if QT_VERSION > QT_VERSION_CHECK(5, 6, 0)
   app.setAttribute(Qt::AA_EnableHighDpiScaling, true);
 #endif
