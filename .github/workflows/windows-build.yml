@@ -1,0 +1,56 @@
+name: Build - Windows
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install Qt (Qt6)
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.6.3'
+
+      - name: Install CMake
+        uses: jwlawson/actions-setup-cmake@v2
+
+      - name: Configure
+        run: cmake . -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build . --config Release
+
+      - name: Prepare dist directory
+        run: |
+          mkdir dist
+          copy Release\fotowall.exe dist\
+
+      - name: Deploy Qt DLLs
+        run: |
+          windeployqt dist\fotowall.exe
+
+      - name: Smoke test bundled executable
+        run: |
+          $proc = Start-Process -FilePath "dist\fotowall.exe" `
+            -ArgumentList "" `
+            -Environment @{ QT_QPA_PLATFORM = "offscreen" } `
+            -PassThru -NoNewWindow
+          Start-Sleep -Seconds 5
+          if ($proc.HasExited -and $proc.ExitCode -ne 0) {
+            Write-Error "fotowall.exe exited with code $($proc.ExitCode) — possible missing DLLs or startup crash"
+            exit 1
+          }
+          if (-not $proc.HasExited) {
+            $proc.Kill()
+          }
+          Write-Host "Smoke test passed"

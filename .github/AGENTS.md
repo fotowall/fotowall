@@ -11,7 +11,7 @@ It supports Qt5 and Qt6, and builds on Linux, macOS, Windows, and WebAssembly.
 
 ### Linux build (`build.yml`)
 
-Runs on every push/PR to `master` (excluding packaging and documentation changes).
+Runs on every branch push and PR (excluding packaging and documentation changes), and on tag pushes after release-tag validation.
 
 | Dimension | Values |
 |-----------|--------|
@@ -32,9 +32,13 @@ Validates the Nix flake on `ubuntu-latest` and `macos-latest`:
 
 A summary job (`check-macos-linux-nix`) aggregates the matrix results.
 
-### Windows release (`windows.yml`)
+### Windows build (`windows-build.yml`)
 
-Runs on PRs targeting `master` and on version tags (`v*`).
+Runs on every branch push and PRs targeting `master`.
+
+### Windows packaging (`windows.yml`)
+
+Runs on tag pushes after release-tag validation.
 
 Steps:
 1. Install Qt 6.6.3 (`msvc2019_64`) via `jurplel/install-qt-action`.
@@ -45,9 +49,10 @@ Steps:
 6. Upload the `dist/` directory as a GitHub Actions artifact (`fotowall-windows`).
 7. On version tags: attach `dist/**` to the GitHub Release.
 
-### Packaging (`package.yml`)
+### Packaging (`package-debian.yml`, `package-appimage.yml`)
 
-Runs on pushes to `master`, version tags, and `repository_dispatch` events (`package-master`, `package-release`).
+Debian packaging runs on pushes to `master`, version tags, and `repository_dispatch` events (`package-master`, `package-release`).
+AppImage packaging runs on tag pushes after release-tag validation.
 
 | Job | Target distros | Qt | Destination |
 |-----|----------------|----|-------------|

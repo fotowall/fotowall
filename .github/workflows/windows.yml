@@ -1,18 +1,47 @@
-name: Windows Release
+name: Package - Windows
 
 on:
-  pull_request:
-    branches:
-      - 'master'
   push:
     tags:
-      - 'v*'
+      - '*'
 
 permissions:
   contents: write
 
 jobs:
-  build-windows:
+  tag-precheck:
+    runs-on: ubuntu-latest
+    outputs:
+      is_valid: ${{ steps.validate.outputs.is_valid }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v8.3.2
+
+      - name: Install jrl-cmakemodules-scripts
+        run: |
+          uv tool install jrl-cmakemodules-scripts --from git+https://github.com/jrl-umi3218/jrl-cmakemodules.git#subdirectory=v2/scripts
+
+      - name: Validate release tag
+        id: validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          RELEASE_TAG="${GITHUB_REF_NAME}"
+          if jrl-release --check-version --check-tag "$RELEASE_TAG"; then
+            echo "is_valid=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_valid=false" >> "$GITHUB_OUTPUT"
+            echo "::error::Tag '$RELEASE_TAG' failed jrl-release validation. Fix PROJECT_VERSION/debian changelog to match the tag."
+            exit 1
+          fi
+
+  package-windows:
+    needs: tag-precheck
+    if: needs.tag-precheck.outputs.is_valid == 'true'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
@@ -66,10 +95,27 @@ jobs:
           name: fotowall-windows
           path: fotowall-windows.zip
 
-      - name: Upload to GitHub Release
-        uses: softprops/action-gh-release@v3
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: fotowall-windows.zip
+      - name: Ensure GitHub release exists
+        shell: pwsh
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "${env:GITHUB_REF_NAME}"
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --title "Release $tag" --notes ""
+            if ($LASTEXITCODE -ne 0) {
+              gh release view $tag *> $null
+              if ($LASTEXITCODE -ne 0) {
+                throw "Failed to create or find release for tag $tag"
+              }
+            }
+          }
+
+      - name: Upload to GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "${env:GITHUB_REF_NAME}"
+          gh release upload $tag "fotowall-windows.zip#fotowall-windows.zip" --clobber

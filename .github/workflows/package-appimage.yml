@@ -1,22 +1,9 @@
 name: Package - AppImage
 on:
-  repository_dispatch:
-    types:
-    - package-master
-    - package-release
   push:
-    paths-ignore: &path-ignore
-    - doc/**
-    - README.md
-    - ".github/workflows/build.yml"
-    - ".github/workflows/webassembly.yml"
-    - ".pre-commit-config.yaml"
-    branches:
-    - master
     tags:
-    - v*
-  pull_request:
-    paths-ignore: *path-ignore
+      - '*'
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -24,7 +11,34 @@ permissions:
   contents: write
 
 jobs:
+  tag-precheck:
+    runs-on: ubuntu-latest
+    outputs:
+      is_valid: ${{ steps.validate.outputs.is_valid }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v8.3.2
+      - name: Install jrl-cmakemodules-scripts
+        run: |
+          uv tool install jrl-cmakemodules-scripts --from git+https://github.com/jrl-umi3218/jrl-cmakemodules.git#subdirectory=v2/scripts
+      - name: Validate release tag
+        id: validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          RELEASE_TAG="${GITHUB_REF_NAME}"
+          if jrl-release --check-version --check-tag "$RELEASE_TAG"; then
+            echo "is_valid=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_valid=false" >> "$GITHUB_OUTPUT"
+            echo "::error::Tag '$RELEASE_TAG' failed jrl-release validation. Fix PROJECT_VERSION/debian changelog to match the tag."
+            exit 1
+          fi
+
   build:
+    needs: tag-precheck
+    if: needs.tag-precheck.outputs.is_valid == 'true'
     strategy: &strategy
       fail-fast: false
       matrix:
@@ -97,7 +111,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Download AppImage artifact
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: Fotowall-latest-x86_64-${{ matrix.os }}
       - name: Smoke test AppImage
@@ -117,47 +131,29 @@ jobs:
             exit 1
           fi
 
-  upload:
+  upload-release:
     needs: smoketest
     strategy: *strategy
     runs-on: ${{ matrix.os }}
-    name: Upload AppImage to Cloudsmith (${{ matrix.os }})
+    name: Upload AppImage to GitHub Release (${{ matrix.os }})
     steps:
-      - uses: actions/checkout@v7
       - name: Download AppImage artifact
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: Fotowall-latest-x86_64-${{ matrix.os }}
-      - name: Install and Authenticate Cloudsmith CLI
-        if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
-        uses: cloudsmith-io/cloudsmith-cli-action@v3.1.0
-        with:
-          api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-      - name: Push to Cloudsmith
-        id: push
-        if: github.ref == 'refs/heads/master' && github.repository == 'fotowall/fotowall'
+
+      - name: Ensure GitHub release exists
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          cloudsmith push raw arntanguy/head "./Fotowall-latest-x86_64.AppImage" \
-            --tags "`lsb_release -cs`" \
-            --name "Fotowall-latest-x86_64-${{ matrix.os }}.AppImage" \
-            --summary "Upload latest raw AppImage" \
-            --description "See https://github.com/cloudsmith-io/action" \
-            --version "${{ github.sha }}" \
-            --republish
-      - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
+          TAG="${GITHUB_REF_NAME}"
+          gh release view "$TAG" > /dev/null 2>&1 || \
+            gh release create "$TAG" --title "Release $TAG" --notes "" || \
+            gh release view "$TAG" > /dev/null 2>&1
+
       - name: Upload AppImage to GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./Fotowall-latest-x86_64.AppImage
-          asset_name: Fotowall-latest-x86_64-${{ matrix.os }}.AppImage
-          asset_content_type: application/octet-stream
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          gh release upload "$TAG" "./Fotowall-latest-x86_64.AppImage#Fotowall-latest-x86_64-${{ matrix.os }}.AppImage" --clobber
