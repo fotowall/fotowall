@@ -17,7 +17,17 @@ We provide several installation options: AppImage or Ubuntu packages on Linux sy
 
 ### Nixpkgs
 
-Use the following to run using nix:
+#### Latest release
+
+To run the last released version, use
+
+```
+nix run nixpkgs#fotowall
+```
+
+#### Latest version on `master`
+
+Use the following to run from the latest commit on `master` using nix:
 
 ```
 nix run github:fotowall/fotowall
