@@ -17,6 +17,7 @@
 #include "Shared/RenderOpts.h"
 #include "Shared/VideoProvider.h"
 #include <QApplication>
+#include <QDir>
 #include <QDebug>
 #include <QLibraryInfo>
 #include <QLocale>
@@ -29,6 +30,16 @@
 
 #if defined(HAS_TRANSLATIONS)
 #  include <QTranslator>
+
+static QStringList fotowallTranslationSearchPaths()
+{
+  const QString applicationDirPath = QCoreApplication::applicationDirPath();
+  return QStringList()
+         << QDir::cleanPath(applicationDirPath + QLatin1String("/translations"))
+         << QDir::cleanPath(applicationDirPath
+                            + QLatin1String("/../share/fotowall/translations"))
+         << QLatin1String(":/translations");
+}
 #endif
 
 #if defined(MOBILE_UI)
@@ -106,11 +117,16 @@ int main(int argc, char ** args)
     locale = QLocale::system().name();
 
   QTranslator translator;
-  translator.load(QString(":/translations/fotowall_%1").arg(locale));
-  app.installTranslator(&translator);
+  const QString translationBaseName = QString("fotowall_%1").arg(locale);
+  for(const QString & translationPath : fotowallTranslationSearchPaths())
+    if(translator.load(translationBaseName, translationPath))
+    {
+      app.installTranslator(&translator);
+      break;
+    }
   QTranslator qtTranslator;
-  qtTranslator.load(QString("qt_") + locale, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-  app.installTranslator(&qtTranslator);
+  if(qtTranslator.load(QString("qt_") + locale, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+    app.installTranslator(&qtTranslator);
 #endif
 
   App::settings = new Settings(app.arguments().contains("-clearconfig"));

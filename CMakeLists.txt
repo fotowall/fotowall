@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.22)
 project(fotowall VERSION 1.1.4 LANGUAGES CXX)
 # cmake-format: on
 
+include(GNUInstallDirs)
+
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
   message(NOTICE "Selected CCache: ${CCACHE_PROGRAM}")
@@ -59,6 +61,52 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+option(FOTOWALL_BUILD_TRANSLATIONS "Build Fotowall translations" ON)
+
+set(FOTOWALL_TRANSLATION_TS_FILES
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_de.ts
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_el.ts
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_en.ts
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_es.ts
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_fr.ts
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_it.ts
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_pl.ts
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_pt_BR.ts
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_ru_RU.ts
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_zh_CN.ts
+    ${CMAKE_SOURCE_DIR}/translations/fotowall_zh_TW.ts)
+
+set(FOTOWALL_TRANSLATION_QM_FILES)
+if(FOTOWALL_BUILD_TRANSLATIONS)
+  if(Qt6_FOUND)
+    set(FOTOWALL_LRELEASE_CANDIDATES lrelease-qt6 lrelease6 lrelease)
+  elseif(Qt5_FOUND)
+    set(FOTOWALL_LRELEASE_CANDIDATES lrelease-qt5 lrelease5 lrelease)
+  endif()
+
+  find_program(FOTOWALL_LRELEASE_EXECUTABLE NAMES ${FOTOWALL_LRELEASE_CANDIDATES})
+  if(FOTOWALL_LRELEASE_EXECUTABLE)
+    foreach(FOTOWALL_TRANSLATION_TS_FILE IN LISTS FOTOWALL_TRANSLATION_TS_FILES)
+      get_filename_component(FOTOWALL_TRANSLATION_NAME
+                             ${FOTOWALL_TRANSLATION_TS_FILE} NAME_WE)
+      set(FOTOWALL_TRANSLATION_QM_FILE
+          ${CMAKE_CURRENT_BINARY_DIR}/translations/${FOTOWALL_TRANSLATION_NAME}.qm)
+      list(APPEND FOTOWALL_TRANSLATION_QM_FILES ${FOTOWALL_TRANSLATION_QM_FILE})
+      add_custom_command(
+        OUTPUT ${FOTOWALL_TRANSLATION_QM_FILE}
+        COMMAND ${CMAKE_COMMAND} -E make_directory
+                ${CMAKE_CURRENT_BINARY_DIR}/translations
+        COMMAND ${FOTOWALL_LRELEASE_EXECUTABLE} -silent -compress
+                -removeidentical ${FOTOWALL_TRANSLATION_TS_FILE} -qm
+                ${FOTOWALL_TRANSLATION_QM_FILE}
+        DEPENDS ${FOTOWALL_TRANSLATION_TS_FILE}
+        VERBATIM)
+    endforeach()
+  else()
+    message(WARNING "Qt translation tools not found, translations are disabled")
+  endif()
+endif()
 
 set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/fotowall.qrc
@@ -267,6 +315,20 @@ else()
 endif()
 add_compile_definitions(HAS_EXPORTDIALOG)
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x051200)
+if(FOTOWALL_TRANSLATION_QM_FILES)
+  add_custom_target(fotowall_translations ALL
+                    DEPENDS ${FOTOWALL_TRANSLATION_QM_FILES})
+  add_dependencies(fotowall fotowall_translations)
+  target_compile_definitions(fotowall PRIVATE HAS_TRANSLATION HAS_TRANSLATIONS)
+  add_custom_command(
+    TARGET fotowall
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+            $<TARGET_FILE_DIR:fotowall>/translations
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${FOTOWALL_TRANSLATION_QM_FILES} $<TARGET_FILE_DIR:fotowall>/translations
+    COMMAND_EXPAND_LISTS)
+endif()
 if(EMSCRIPTEN)
   # XXX needed?
   set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
@@ -351,14 +413,19 @@ target_include_directories(fotowall
 
 install(
   TARGETS fotowall
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+if(FOTOWALL_TRANSLATION_QM_FILES)
+  install(FILES ${FOTOWALL_TRANSLATION_QM_FILES}
+          DESTINATION ${CMAKE_INSTALL_DATADIR}/fotowall/translations)
+endif()
 
 if(NOT WIN32)
   install(
     FILES fotowall.png
-    DESTINATION share/pixmaps
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/pixmaps
     RENAME fotowall.png)
-  install(FILES fotowall.desktop DESTINATION share/applications)
+  install(FILES fotowall.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 endif()

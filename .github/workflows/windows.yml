@@ -34,6 +34,8 @@ jobs:
         run: |
           mkdir dist
           copy Release\fotowall.exe dist\
+          mkdir dist\translations
+          copy Release\translations\*.qm dist\translations\
 
       - name: Deploy Qt DLLs
         run: |
@@ -41,6 +43,10 @@ jobs:
 
       - name: Smoke test bundled executable
         run: |
+          if (-not (Test-Path "dist\translations\fotowall_en.qm")) {
+            Write-Error "Missing bundled Fotowall translations"
+            exit 1
+          }
           $proc = Start-Process -FilePath "dist\fotowall.exe" `
             -ArgumentList "" `
             -Environment @{ QT_QPA_PLATFORM = "offscreen" } `
