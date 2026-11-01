@@ -60,7 +60,7 @@ private:
       MasterCanvas,
       SlaveCanvas
 #if defined(HAS_WORDCLOUD_APPLIANCE)
-      ,
+          ,
       MasterWordcloud,
       SlaveWordcloud
 #endif
