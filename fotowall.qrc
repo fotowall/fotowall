@@ -60,7 +60,7 @@
         <file>translations/fotowall_pt_BR.qm</file>
         <file>translations/fotowall_ru_RU.qm</file>
         <file>translations/fotowall_zh_CN.qm</file>
-        <file>translations/fotowall_zh_TW.ts</file>
+        <file>translations/fotowall_zh_TW.qm</file>
     </qresource>
     <qresource prefix="/plasma-frames" >
         <file alias="1.svg" >data/frame-plasma-1.svg</file>

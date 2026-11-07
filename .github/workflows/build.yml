@@ -38,7 +38,7 @@ jobs:
         compiler: ${{ matrix.compiler }}
         build-type: ${{ matrix.build-type }}
         ubuntu: |
-          apt: qtbase5-dev libqt5svg5-dev libqt5webkit5-dev
+          apt: qtbase5-dev libqt5svg5-dev libqt5webkit5-dev qttools5-dev-tools
     - name: Install dependencies (Qt6)
       if: matrix.os == 'ubuntu-26.04'
       uses: jrl-umi3218/github-actions/install-dependencies@master
@@ -46,7 +46,7 @@ jobs:
         compiler: ${{ matrix.compiler }}
         build-type: ${{ matrix.build-type }}
         ubuntu: |
-          apt: qt6-base-dev qt6-svg-dev
+          apt: qt6-base-dev qt6-svg-dev qt6-tools-dev-tools
     - name: Build and test
       uses: jrl-umi3218/github-actions/build-cmake-project@master
       with:
